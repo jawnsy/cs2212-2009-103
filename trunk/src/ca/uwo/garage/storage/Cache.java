@@ -1,103 +1,89 @@
 package ca.uwo.garage.storage;
 
-import java.util.Collection;
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
 
-public class Cache
-	implements Storage
+public class Cache<T>
+	implements Serializable
 {
-	private Storage m_storage; // our backend storage
-	private TreeMap<String, CacheObject> m_cached; // String key; CacheObject values
-	private int m_hits, m_misses; // cache hits & misses
+	private static final long serialVersionUID = 1L;
+
 	private final int EXPIRE = 10*60*1000; // only keep data for 10 minutes
-	private Timer m_cleaner;
+	private transient Timer m_cleaner; // garbage collection thread
+	
+	// User cache information
+	private TreeMap<String, CacheObject<T>> m_cache; // String key; CacheObject values
+	private transient int m_hits, m_misses; // cache hits & misses
 
 	public Cache(Storage stor) {
-		m_storage = stor;
-
 		// Create a new Daemon thread (ie, does not prolong application run time)
 		m_cleaner = new Timer(true);
 		m_cleaner.schedule(new ExpireTask(), 0, 60); // start immediately, repeat every 60 seconds
+
+		m_cache = new TreeMap<String, CacheObject<T>>();
+		m_hits = m_misses = 0;
 	}
 
-	public void delete(User user) {
-		if (m_cached.containsKey(user.userid()))
-			m_cached.remove(user.userid());
-
-		m_storage.delete(user);
+	public void delete(String key) {
+		if (!m_cache.containsKey(key))
+			return;
+		m_cache.remove(key);
 	}
 
-	public boolean existsUser(String userid) {
-		// Consult our cache first
-		if (m_cached.containsKey(userid)) {
+	public boolean exists(String key) {
+		if (m_cache.containsKey(key)) {
 			m_hits++;
 			return true;
 		}
 
-		// Otherwise it's a cache miss, so check our backend
 		m_misses++;
-		return m_storage.existsUser(userid);
+		return false;
 	}
 
-	public User findUser(String userid) {
-		if (m_cached.containsKey(userid)) {
+	public T find(String key)
+	{
+		if (m_cache.containsKey(key)) {
 			m_hits++;
-			return (User) m_cached.get(userid).object();
+			return m_cache.get(key).read();
 		}
 
-		User search = m_storage.findUser(userid);
-		m_cached.put(userid, new CacheObject(search));
-
-		// Otherwise, it's a cache miss, so check our backend
+		m_misses++;
 		return null;
+	}
+
+	public void store(String key, T obj)
+	{
+		// if we already have this object, remove it
+		if (m_cache.containsKey(key))
+			m_cache.remove(key);
+
+		m_cache.put(key, new CacheObject<T>(obj));
 	}
 
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public boolean isFull() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public int length() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public Collection<User> listUsers() {
-		// TODO Auto-generated method stub
-		return null;
+		return m_cache.isEmpty();
 	}
 
 	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public void store(User user) {
-		// TODO Auto-generated method stub
-		
+		return m_cache.size();
 	}
 
 	private class ExpireTask
 		extends TimerTask
 	{
 		public void run() {
-			Iterator<String> iter = m_cached.keySet().iterator();
+			Iterator<String> iter = m_cache.keySet().iterator();
 			// loop through each key in our cache
 			while (iter.hasNext()) {
 				String key = iter.next();
 	
 				// remove object from cache if it's expired
-				CacheObject obj = m_cached.get(key);
+				CacheObject<T> obj = m_cache.get(key);
 				if (obj.lastUsedAgoMillis() > EXPIRE)
-					m_cached.remove(key);
+					m_cache.remove(key);
 			}
 		}
 	}
