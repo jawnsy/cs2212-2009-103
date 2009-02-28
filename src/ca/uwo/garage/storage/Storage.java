@@ -9,9 +9,13 @@ public interface Storage
 	public abstract int size();
 	public abstract int length();
 
-	public abstract User findUser(String userid);
-	public abstract Collection<User> listUsers();
-	public abstract void store(User user);
-	public abstract void delete(User user);
+	public abstract User findUser(String userid)
+		throws StorageNotFoundException;
+	public abstract Collection<User> listUsers()
+		throws StorageEmptyException;
+	public abstract void store(User user)
+		throws StorageFullException;
+	public abstract void delete(User user)
+		throws StorageNotFoundException;
 	public abstract boolean existsUser(String userid);
 }

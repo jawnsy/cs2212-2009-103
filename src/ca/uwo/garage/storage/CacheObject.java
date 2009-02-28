@@ -1,10 +1,10 @@
 package ca.uwo.garage.storage;
 
-class CacheObject { // is a package-visible class
-	private Object m_object;
+class CacheObject<T> { // is a package-visible class
+	private T m_object;
 	private long m_lastUsed; // last used time, in milliseconds
 
-	public CacheObject(Object obj) {
+	public CacheObject(T obj) {
 		m_object = obj;
 	}
 
@@ -12,7 +12,7 @@ class CacheObject { // is a package-visible class
 		long now = System.currentTimeMillis();
 		return (now - m_lastUsed);
 	}
-	public Object object() {
+	public T read() {
 		m_lastUsed = System.currentTimeMillis();
 		return m_object;
 	}
