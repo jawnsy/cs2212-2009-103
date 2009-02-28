@@ -1,7 +1,5 @@
 package ca.uwo.garage.storage;
 
-
-
 public class GeoPosition {
 	private double m_latitude; // positive is North
 	private double m_longitude; // positive is East
@@ -52,7 +50,8 @@ public class GeoPosition {
 		longitude(longitude);
 	}
 
-	public double distance(GeoPosition other) {
+	public double distance(GeoPosition other)
+	{
 		return 0.0;
 	}
 

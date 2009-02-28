@@ -2,6 +2,7 @@ package ca.uwo.cache;
 
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
@@ -63,6 +64,10 @@ public class Cache<T>
 			m_cache.remove(key);
 
 		m_cache.put(key, new CacheObject<T>(obj));
+	}
+
+	public Set<String> keys() {
+		return m_cache.keySet();
 	}
 
 	public boolean isEmpty() {
