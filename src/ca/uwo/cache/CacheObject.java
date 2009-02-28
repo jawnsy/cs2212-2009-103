@@ -1,4 +1,4 @@
-package ca.uwo.garage.storage;
+package ca.uwo.cache;
 
 class CacheObject<T> { // is a package-visible class
 	private T m_object;
