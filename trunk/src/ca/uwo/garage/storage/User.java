@@ -31,7 +31,7 @@ public class User
 		m_password = "aaa";
 		m_seller = false;
 	}
-	public String userid() {
+	public String id() {
 		return m_userid;
 	}
 

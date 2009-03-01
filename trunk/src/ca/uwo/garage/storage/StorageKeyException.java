@@ -8,6 +8,9 @@ public class StorageKeyException
 	public StorageKeyException(String namespace, String key) {
 		super("The given key is a duplicate: " + key + "@" + namespace);
 	}
+	public StorageKeyException(String namespace, int key) {
+		this(namespace, Integer.toString(key));
+	}
 	public StorageKeyException(String msg) {
 		super(msg);
 	}
