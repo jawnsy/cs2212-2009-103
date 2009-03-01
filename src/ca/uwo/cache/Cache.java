@@ -14,7 +14,7 @@ public class Cache<T>
 {
 	private static final long serialVersionUID = 1L;
 
-	private final int EXPIRE = 10*60*1000; // only keep data for 10 minutes
+	private final int EXPIRE = 20*60*1000; // only keep data for 20 minutes
 	private transient Timer m_cleaner; // garbage collection thread
 	
 	// User cache information

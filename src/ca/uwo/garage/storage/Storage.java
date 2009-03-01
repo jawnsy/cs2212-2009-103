@@ -7,7 +7,12 @@ public interface Storage
 	public abstract boolean isFull();
 
 	public abstract int size();
-	public abstract int length();
+	public abstract long length();
+
+	public abstract void connect()
+		throws StorageException;
+	public abstract void disconnect()
+		throws StorageException;
 
 	public abstract User findUser(String userid)
 		throws StorageNotFoundException;
