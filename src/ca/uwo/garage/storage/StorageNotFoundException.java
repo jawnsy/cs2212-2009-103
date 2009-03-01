@@ -8,4 +8,7 @@ public class StorageNotFoundException
 	public StorageNotFoundException(String namespace, String key) {
 		super("The given key was not found: " + key + "@" + namespace);
 	}
+	public StorageNotFoundException(String namespace, int key) {
+		this(namespace, Integer.toString(key));
+	}	
 }

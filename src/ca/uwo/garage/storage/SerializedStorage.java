@@ -28,8 +28,13 @@ public class SerializedStorage
 
 	// this is the TreeMap that contains our objects
 	private transient TreeMap<String, User> m_user;
+	private transient TreeMap<Integer, Category> m_category;
+	private transient SequenceSet m_sequence;
 
 	public SerializedStorage() {
+		// Instantiate all of the data structures
+		m_user = new TreeMap<String, User>();
+		m_category = new TreeMap<Integer, Category>();
 	}
 
 	// this reads everything into our cache
@@ -61,18 +66,17 @@ public class SerializedStorage
 			throw new StorageException("Could not create or read database file '" + DATABASE + "'");
 		}
 
-		// Create a new TreeMap instance
-		m_user = new TreeMap<String, User>();
-
 		// Actually do the file reading work here
 		try {
 			ObjectInputStream reader = new ObjectInputStream(in);
-			// While our stream has some stuff available for us to read
+			// Populate the TreeMaps
 			load(reader);
 		}
 		catch (IOException e) {
 			throw new StorageException("Problem reading from database file '" + DATABASE + "'");
 		}
+
+		m_sequence.register("category_id");
 	}
 
 	public void disconnect()
@@ -115,13 +119,20 @@ public class SerializedStorage
 	private void save(ObjectOutputStream out)
 		throws IOException
 	{
-		save(out, m_user.values().iterator());
+		save(out, m_user.values());
+		save(out, m_category.values());
+		out.writeObject(m_sequence);
 	}
-	private void save(ObjectOutputStream out, Iterator<?> list)
+	private void save(ObjectOutputStream out, Collection<?> list)
 		throws IOException
 	{
-		while (list.hasNext()) {
-			Object obj = list.next();
+		// Write out the size of the block
+		out.writeInt(list.size());
+
+		// Dump everything in the Collection by iterating
+		Iterator<?> iter = list.iterator();
+		while (iter.hasNext()) {
+			Object obj = iter.next();
 			out.writeObject(obj);
 		}
 	}
@@ -131,24 +142,28 @@ public class SerializedStorage
 		throws IOException
 	{
 		try {
-			while (in.available() > 0) {
-				Object obj = in.readObject();
-				load(obj);
+			// Read the User objects
+			int size = in.readInt();
+			for (int i = 0; i < size; i++) {
+				User user = (User) in.readObject();
+				m_user.put(user.id(), user);
 			}
+
+			// Read the Category objects
+			size = in.readInt();
+			for (int i = 0; i < size; i++) {
+				Category category = (Category) in.readObject();
+				m_category.put(category.id(), category);
+			}
+
+			// Read the SequenceSet
+			m_sequence = (SequenceSet) in.readObject();
 		}
 		catch (ClassNotFoundException e) {
 			System.err.println("Error: Serialized Java class cannot be restored because of missing class");
 			e.printStackTrace();
 			System.exit(1);
 		}
-	}
-	private void load(Object obj) {
-		// If we have a User object, then store it in our Cache
-		if (obj instanceof User)
-			load((User) obj);
-	}
-	private void load(User user) {
-		m_user.put(user.userid(), user);		
 	}
 
 	public boolean isEmpty() {
@@ -165,6 +180,7 @@ public class SerializedStorage
 		return file.length();
 	}
 
+	// Stuff to do with User objects
 	public User findUser(String userid)
 		throws StorageNotFoundException
 	{
@@ -178,10 +194,67 @@ public class SerializedStorage
 	public Collection<User> listUsers() {
 		return m_user.values();
 	}
-	public void store(User user) {
-		
+	public void store(User user)
+		throws StorageFullException, StorageKeyException
+	{
+		String userid = user.id();
+		if (m_user.containsKey(userid))
+			throw new StorageKeyException("User with id '" + userid + "' already exists!");
+
+		m_user.put(userid, user);
 	}
-	public void delete(User user) {
-		
+	public void delete(User user)
+		throws StorageNotFoundException
+	{
+		String userid = user.id();
+		if (!m_user.containsKey(userid))
+			throw new StorageNotFoundException("users", userid);
+		m_user.remove(userid);
+	}
+
+	// Stuff to do with Category objects
+	public Category findCategory(int categoryid)
+		throws StorageNotFoundException
+	{
+		if (!m_category.containsKey(categoryid))
+			throw new StorageNotFoundException("categories", categoryid);
+		return m_category.get(categoryid);
+	}
+	public boolean existsCategory(int categoryid) {
+		return m_user.containsKey(categoryid);
+	}
+	public Collection<Category> listCategories() {
+		return m_category.values();
+	}
+	public void store(Category category)
+		throws StorageFullException, StorageKeyException
+	{
+		int categoryid = category.id();
+
+		// We're trying to store one that doesn't yet have an id, generate one
+		if (categoryid == -1) {
+			categoryid = m_sequence.nextval("category_id");
+			category.id(categoryid);
+		}
+
+		/* The categoryid already exists - this shouldn't happen since the sequence generator will
+		 * guarantee uniqueness
+		 */
+		if (m_category.containsKey(categoryid)) {
+			throw new StorageKeyException("Category with id '" + categoryid + "' already exists! " +
+					"This is a bug; please file a report.");
+		}
+
+		m_category.put(categoryid, category);
+	}
+	public void delete(Category category)
+		throws StorageNotFoundException
+	{
+		int categoryid = category.id();
+
+		if (!m_category.containsKey(categoryid))
+			throw new StorageNotFoundException("categories", categoryid);
+
+		m_category.remove(categoryid);
 	}
 }
