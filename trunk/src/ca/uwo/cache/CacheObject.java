@@ -6,11 +6,11 @@ class CacheObject<T> { // is a package-visible class
 
 	public CacheObject(T obj) {
 		m_object = obj;
+		m_lastUsed = System.currentTimeMillis();
 	}
 
 	public long lastUsedAgoMillis() {
-		long now = System.currentTimeMillis();
-		return (now - m_lastUsed);
+		return (System.currentTimeMillis() - m_lastUsed);
 	}
 	public T read() {
 		m_lastUsed = System.currentTimeMillis();
