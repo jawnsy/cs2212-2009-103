@@ -167,13 +167,20 @@ public class SerializedStorage
 	}
 
 	public boolean isEmpty() {
-		return (m_user.isEmpty());
+		return (
+			m_user.isEmpty() &&
+			m_category.isEmpty() &&
+			m_sequence == null
+		);
 	}
 	public boolean isFull() {
 		return false; // can never be full, until we run out of memory
 	}
 	public int size() {
-		return (m_user.size());
+		return (
+			m_user.size() +
+			m_category.size()
+		);
 	}
 	public long length() {
 		File file = new File(DATABASE);

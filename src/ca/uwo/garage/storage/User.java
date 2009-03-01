@@ -10,12 +10,13 @@ public class User
 	private static final int USERIDLEN   = 4;
 	private static final int NAMELEN     = 20;
 	private static final int PASSWORDLEN = 3;
+	private static final int PHONENUMLEN = 10;
 
 	// char is not flexible in size, but takes much less disk to store
 	// these are all package variables so that they can be modified by Storage classes
 	String m_userid, m_firstName, m_lastName, m_password, m_phone;
-	GeoPosition m_home;
-	Zoom m_zoom;
+	transient GeoPosition m_home;
+	transient Zoom m_zoom;
 	boolean m_seller;
 
 	public User(String userid)
@@ -95,7 +96,12 @@ public class User
 		return false;
 	}
 
-	public void phone(String phoneNumber) {
+	public void phone(String phoneNumber)
+		throws UserException
+	{
+		if (phoneNumber == null || phoneNumber.length() == PHONENUMLEN)
+			throw new UserException("Phone numbers must be exactly " + PHONENUMLEN + " numbers long");
+
 		m_phone = phoneNumber;
 	}
 	public String phone() {
