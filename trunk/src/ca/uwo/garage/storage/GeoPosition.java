@@ -1,10 +1,23 @@
+/**
+* This class represents a geographic coordinate
+* 
+* @author Jonathan Yu
+* @version Version 1.0
+*/ 
 package ca.uwo.garage.storage;
 
 public class GeoPosition {
-	private double m_latitude; // positive is North
-	private double m_longitude; // positive is East
+	
+	//instance variables **********************************
+	private double m_latitude; 		// The latitude coordinate. Positive is North
+	private double m_longitude; 	// The Longitude coordinate. Positive is East
 
-	public GeoPosition() {
+	/**
+	 * Constructor for objects of class GeoPosition creates a new 
+	 * GeoPosition with default coordinates (43.011583,-81.257586)
+	 */
+	public GeoPosition() 
+	{
 		/* These are the coordinates of the University of Western Ontario
 		 * campus in London, ON. 1151 Richmond Street
 		 */
@@ -12,6 +25,13 @@ public class GeoPosition {
 		m_longitude = -81.257586;
 	}
 
+	/**
+	 * Constructor for objects of class GeoPosition
+	 * creates a new GeoPosition with the coordinates specified
+	 * by the parameters
+	 * @param m_latitude Latitude value of coordinate
+	 * @param m_longitude Longitude value of coordinate
+	 */
 	public GeoPosition(double latitude, double longitude)
 		throws GeoPositionException
 	{
@@ -19,9 +39,30 @@ public class GeoPosition {
 		latlong(latitude, longitude);
 	}
 
-	public double latitude() {
+	// ACCESSOR METHODS ***********************************
+	/**
+	 * This method will return the latitude coordinate
+	 * @return the latitude coordinate
+	 */
+	public double latitude() 
+	{
 		return m_latitude;
 	}
+
+	/**
+	 * This method will return the longitude coordinate
+	 * @return the longitude coordinate
+	 */
+	public double longitude() 
+	{
+		return m_longitude;
+	}
+	
+	// MUTATOR METHODS ***********************************
+	/**
+	 * This Method sets the latitude value of a GeoPosition object
+	 * @param latitude The latitude value
+	 */
 	public void latitude(double coord)
 		throws GeoPositionException
 	{
@@ -30,10 +71,11 @@ public class GeoPosition {
 
 		m_latitude = coord;
 	}
-
-	public double longitude() {
-		return m_longitude;
-	}
+	
+	/**
+	 * This Method sets the longitude value of a GeoPosition object
+	 * @param longitude The longitude value
+	 */
 	public void longitude(double coord)
 		throws GeoPositionException
 	{
@@ -43,6 +85,12 @@ public class GeoPosition {
 		m_longitude = coord;
 	}
 
+	/**
+	 * This method sets the latitude and longitude values of
+	 * a GeoPosition object
+	 * @param latitude The latitude value
+	 * @param longitude The longitude value
+	 */
 	public void latlong(double latitude, double longitude)
 		throws GeoPositionException
 	{
@@ -50,12 +98,24 @@ public class GeoPosition {
 		longitude(longitude);
 	}
 
+	/**
+	 * This method calculates the Euclidean distance between two
+	 * GeoPosition objects
+	 * @param other The second GeoPosition object
+	 * @return the Euclidean distance between the two GeoPosition objects
+	 */
 	public double distance(GeoPosition other)
 	{
 		return 0.0;
 	}
 
-	public String toString() {
+	/**
+	 * This method returns a string displaying the coordinates
+	 * of a GeoPosition object
+	 * @return the string displaying the coordinates
+	 */
+	public String toString() 
+	{
 		StringBuilder str = new StringBuilder();
 
 		if (m_latitude > 0)
