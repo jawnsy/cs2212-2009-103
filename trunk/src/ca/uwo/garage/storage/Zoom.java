@@ -50,7 +50,6 @@ public class Zoom {
 		if (zoom < Z_MIN || zoom > Z_MAX)
 			throw new ZoomInvalidException("Zoom level must be between " + Z_MIN + " and " + Z_MAX + " inclusive");
 	}
-// HELPER METHODS *************************************
 	
 	/**
 	* The up method will zoom the map up from the current level by 1 level.
