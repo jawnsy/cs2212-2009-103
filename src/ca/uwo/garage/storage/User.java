@@ -12,12 +12,10 @@ public class User
 	private static final int PASSWORDLEN = 3;
 	private static final int PHONENUMLEN = 10;
 
-	// char is not flexible in size, but takes much less disk to store
 	// these are all package variables so that they can be modified by Storage classes
 	String m_userid, m_firstName, m_lastName, m_password, m_phone;
 	transient GeoPosition m_home;
 	transient Zoom m_zoom;
-	boolean m_seller;
 
 	public User(String userid)
 		throws UserIdException
@@ -30,7 +28,6 @@ public class User
 
 		m_userid = userid;
 		m_password = "aaa";
-		m_seller = false;
 	}
 	public String id() {
 		return m_userid;
@@ -108,19 +105,6 @@ public class User
 		return m_phone;
 	}
 
-	public boolean isBuyer() {
-		return (!m_seller);
-	}
-	public boolean isSeller() {
-		return m_seller;
-	}
-	public String type() {
-		if (m_seller)
-			return "seller";
-
-		return "buyer";
-	}
-
 	public Zoom zoom() {
 		if (m_zoom == null)
 			m_zoom = new Zoom();
@@ -134,6 +118,6 @@ public class User
 	}
 
 	public String toString() {
-		return m_userid + " [" + type() + "]";
+		return m_userid;
 	}
 }
