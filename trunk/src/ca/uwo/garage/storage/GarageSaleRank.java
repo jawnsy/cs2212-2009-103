@@ -46,5 +46,16 @@ public class GarageSaleRank {
 	public int rank(){
 		return m_rank;			//return the rank number
 	}
+
+//MUTATOR METHODS *************************************
+	/**
+	 * this method set the rank to the specified rank level
+	 *  @param level the specified rank level to be set to
+	 */
+	public void rank(int level){
+		m_rank = level;
+	}
+	
+//HELPER METHODS ***************************************
 	
 }
