@@ -4,7 +4,7 @@ package ca.uwo.garage.storage;
  * a specified User object, GarageSale object and rank information are bound
  * 
  * @author Jason Lu
- * @version Version 1.0
+ * @version $Revision$
  */
 
 public class GarageSaleRank {

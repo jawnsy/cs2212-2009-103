@@ -1,6 +1,19 @@
 package ca.uwo.garage.storage;
 import java.io.Serializable;
 
+/**
+ * The User class provides a way to represent a given program user and
+ * the operations they might perform. It includes validation of their
+ * input to ensure they match the assignment length constraints.
+ *
+ * This class is capable of writing and reading a condensed version of
+ * itself as part of serialization.
+ * 
+ * @author Jonathan Yu
+ * @implements Serializable
+ * @version $Revision$
+ */
+
 public class User
 	implements Serializable
 {
@@ -17,6 +30,17 @@ public class User
 	transient GeoPosition m_home;
 	transient Zoom m_zoom;
 
+	/**
+	 * This builds a User object with a given userid string. The userid must be exactly
+	 * USERIDLEN characters long; a UserIdException will be thrown if this is not true.
+	 * 
+	 * By default, the password is instantiated to "aaa"; this should be changed
+	 * upon the first user login. Thus if the password is "aaa", the user should be
+	 * told that their password is insecure and should be changed.
+	 * 
+	 * @param userid The userid of this User
+	 * @throws UserIdException if userid is null, empty or not USERIDLEN characters long
+	 */
 	public User(String userid)
 		throws UserIdException
 	{
@@ -29,10 +53,22 @@ public class User
 		m_userid = userid;
 		m_password = "aaa";
 	}
+
+	/**
+	 * This returns the User's current userid, suitable for use as a key for searching.
+	 * 
+	 * @return the User's userid
+	 */
 	public String id() {
 		return m_userid;
 	}
 
+	/**
+	 * This method sets the User's first name according to the assignment constraints.
+	 * 
+	 * @param name The user's new first name
+	 * @throws UserNameException if name is null, empty or longer than NAMELEN characters
+	 */
 	public void first_name(String name)
 		throws UserNameException
 	{
@@ -43,14 +79,25 @@ public class User
 			throw new UserNameException("The specified name is too long");
 
 		m_lastName = name;
-
 	}
+
+	/**
+	 * This method returns the current User's first name, or null if not yet set.
+	 * 
+	 * @return a string containing the user's first name, or null
+	 */
 	public String first_name() {
 		return m_firstName;
 	}
 
+	/**
+	 * This method sets the User's last name according to the assignment constraints.
+	 * 
+	 * @param name The user's new last name
+	 * @throws UserNameException if name is null, empty or longer than NAMELEN characters
+	 */
 	public void last_name(String name)
-		throws UserException
+		throws UserNameException
 	{
 		if (name == null || name.isEmpty())
 			throw new UserNameException("The name parameter cannot be null or empty");
@@ -60,10 +107,26 @@ public class User
 
 		m_lastName = name;
 	}
+
+	/**
+	 * This method returns the current User's last name, or null if not yet set.
+	 * 
+	 * @return a string containing the user's last name, or null
+	 */
 	public String last_name() {
 		return m_lastName;
 	}
 
+	/**
+	 * This method returns the user's full name.
+	 * 
+	 * If only the firstname is set, then the user's first name is returned.
+	 * If both the firstname and lastname are set, then it concatenates both
+	 * of them separated by a space.
+	 * If the firstname is not set, then a null value is returned.
+	 *
+	 * @return the User's full name, or null
+	 */
 	public String name() {
 		// don't have a first name, stop now
 		if (m_firstName == null)
@@ -76,6 +139,14 @@ public class User
 		return m_firstName + " " + m_lastName;
 	}
 
+	/**
+	 * This method stores the user's password or passphrase. There are no guarantees how the password
+	 * is represented internally, and there is no way to retrieve a password, since it may (and, in
+	 * fact, should) be stored as a one-way cryptographic hash rather than as plaintext.
+	 * 
+	 * @param passphrase the new password to set for this User
+	 * @throws UserPasswordException if the password is null, empty or not equal to PASSWORDLEN characters
+	 */
 	public void password(String passphrase)
 		throws UserPasswordException
 	{
@@ -87,6 +158,14 @@ public class User
 
 		m_password = passphrase;
 	}
+
+	/**
+	 * This method returns whether or not the given passphrase is valid - that it matches the User's
+	 * current set passphrase.
+	 * 
+	 * @param passphrase to check against the User's passphrase
+	 * @return true if the Password is correct; or false otherwise
+	 */
 	public boolean validPassword(String passphrase) {
 		if (m_password == passphrase)
 			return true;
