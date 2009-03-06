@@ -5,6 +5,8 @@ import java.util.Collection;
 /**
  * this interface is used to provide method to print
  * the garage sale info into HTML format
+ * @author Jason Lu
+ * @version 1.0
  */
 
 public interface Printer {
