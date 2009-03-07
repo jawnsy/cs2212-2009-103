@@ -123,30 +123,13 @@ public class Category
 		m_id = id;
 	}
 
-	/**
-	 * PRIVATE SPECIAL METHOD - For Serialization
-	 * 
-	 * When this Category object is being serialized, it will store its Id and Object only,
-	 * in that order.
-	 *
-	 * @throws IOException if there was an error with the given ObjectOutputStream
-	 */
+	// Internal code for storing and restoring the object
 	private void writeObject(ObjectOutputStream out)
 		throws IOException
 	{
 		out.writeInt(m_id);
 		out.writeObject(m_name);
 	}
-
-	/**
-	 * PRIVATE SPECIAL METHOD - For Serialization
-	 * 
-	 * When this Category object is being deserialized, it will read its Id and Object only,
-	 * in that order.
-	 *
-	 * @throws IOException if there was an error with the given ObjectInputStream
-	 * @throws ClassNotFoundException this case shouldn't ever occur, and would be a bug in Serializable
-	 */
 	private void readObject(ObjectInputStream in)
 		throws IOException, ClassNotFoundException
 	{

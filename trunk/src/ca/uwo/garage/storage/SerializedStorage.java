@@ -29,15 +29,24 @@ public class SerializedStorage
 	// this is the TreeMap that contains our objects
 	private transient TreeMap<String, User> m_user;
 	private transient TreeMap<Integer, Category> m_category;
+	private transient TreeMap<Integer, GarageSale> m_sales;
 	private transient SequenceSet m_sequence;
 
+	/**
+	 * This constructs a new SerializedStorage container.
+	 */
 	public SerializedStorage() {
 		// Instantiate all of the data structures
 		m_user = new TreeMap<String, User>();
 		m_category = new TreeMap<Integer, Category>();
+		m_sales = new TreeMap<Integer, GarageSale>();
 	}
 
-	// this reads everything into our cache
+	/**
+	 * This connects to the file database and loads its contents into memory. If the
+	 * file does not exist, then it will create it and set its permissions to read/write.
+	 * @throws StorageException if there is an error reading the database
+	 */
 	public void connect()
 		throws StorageException
 	{
@@ -76,9 +85,18 @@ public class SerializedStorage
 			throw new StorageException("Problem reading from database file '" + DATABASE + "'");
 		}
 
+		// If the Sequence generator did not get loaded from disk, then create one
+		if (m_sequence == null)
+			m_sequence = new SequenceSet();
+
+		// Register the sequences we'll use later, to ensure it doesn't conflict with anything else
 		m_sequence.register("category_id");
+		m_sequence.register("sale_id");
 	}
 
+	/**
+	 * This forces the Storage class to immediately flush its data to disk.
+	 */
 	public void disconnect()
 		throws StorageException
 	{
@@ -98,13 +116,18 @@ public class SerializedStorage
 		try {
 			ObjectOutputStream writer = new ObjectOutputStream(out);
 			save(writer);
+			writer.flush();
 		}
 		catch (IOException e) {
 			throw new StorageException("Problem writing to database file '" + DATABASE + "'");
 		}
 	}
 
-	// save everything when we destroy the object
+	/**
+	 * This destructor automatically cleans up after the Storage. If there is a problem writing
+	 * the database to disk, it simply returns an error and complete stack trace before being
+	 * destroyed.
+	 */
 	public void finalize() {
 		try {
 			disconnect();
@@ -119,9 +142,10 @@ public class SerializedStorage
 	private void save(ObjectOutputStream out)
 		throws IOException
 	{
+		out.writeObject(m_sequence);
 		save(out, m_user.values());
 		save(out, m_category.values());
-		out.writeObject(m_sequence);
+		save(out, m_sales.values());
 	}
 	private void save(ObjectOutputStream out, Collection<?> list)
 		throws IOException
@@ -142,6 +166,9 @@ public class SerializedStorage
 		throws IOException
 	{
 		try {
+			// Read the SequenceSet
+			m_sequence = (SequenceSet) in.readObject();
+
 			// Read the User objects
 			int size = in.readInt();
 			for (int i = 0; i < size; i++) {
@@ -156,8 +183,7 @@ public class SerializedStorage
 				m_category.put(category.id(), category);
 			}
 
-			// Read the SequenceSet
-			m_sequence = (SequenceSet) in.readObject();
+			// Read the GarageSale objects
 		}
 		catch (ClassNotFoundException e) {
 			System.err.println("Error: Serialized Java class cannot be restored because of missing class");
@@ -166,43 +192,97 @@ public class SerializedStorage
 		}
 	}
 
+	/**
+	 * If  the Storage class does not contain anything in its containers, this will be true.
+	 * 
+	 * @return true if the Storage class is empty; false otherwise
+	 */
 	public boolean isEmpty() {
 		return (
-			m_user.isEmpty() &&
+			m_user.isEmpty()     &&
 			m_category.isEmpty() &&
+			m_sales.isEmpty()    &&
 			m_sequence == null
 		);
 	}
+
+	/**
+	 * If the Storage class can no longer store anything new (ie, out of memory), then
+	 * this will be true. It is advisable that, when this condition occurs, a user is
+	 * informed of this condition and the program exits.
+	 * 
+	 * @return true if the Storage class is at capacity; false otherwise
+	 */
 	public boolean isFull() {
 		return false; // can never be full, until we run out of memory
 	}
+	
+	/**
+	 * Return the total number of entries held by this Storage class
+	 * 
+	 * @return an int describing the number of items held
+	 */
 	public int size() {
 		return (
 			m_user.size() +
-			m_category.size()
+			m_category.size() +
+			m_sales.size()
 		);
 	}
+
+	/**
+	 * @return the size of the database in bytes
+	 */
 	public long length() {
 		File file = new File(DATABASE);
 		return file.length();
 	}
 
-	// Stuff to do with User objects
+	/**
+	 * This method searches for a user based on their userid, and returns it
+	 * if they exist.
+	 * 
+	 * @param userid The user's unique id
+	 * @throws StorageNotFoundException if there is no such userid
+	 * @return a User object
+	 */
 	public User findUser(String userid)
 		throws StorageNotFoundException
 	{
 		if (!m_user.containsKey(userid))
 			throw new StorageNotFoundException(userid, "users");
+
 		return m_user.get(userid);
 	}
+
+	/**
+	 * Check if a User exists based on their userid.
+	 * 
+	 * @param userid The user's unique id
+	 * @return true if the userid exists, false otherwise
+	 */
 	public boolean existsUser(String userid) {
 		return m_user.containsKey(userid);
 	}
+
+
+	/**
+	 * Get a list of all users. It is a Collection that may vary based on the
+	 * storage container.
+	 * 
+	 * @return A Collection containing a list of User objects
+	 */
 	public Collection<User> listUsers() {
 		return m_user.values();
 	}
+
+	/**
+	 * Stores a given User object.
+	 * 
+	 * @throws StorageKeyException if the userid already exists
+	 */
 	public void store(User user)
-		throws StorageFullException, StorageKeyException
+		throws StorageKeyException
 	{
 		String userid = user.id();
 		if (m_user.containsKey(userid))
@@ -210,6 +290,12 @@ public class SerializedStorage
 
 		m_user.put(userid, user);
 	}
+
+	/**
+	 * Deletes a given User object.
+	 * 
+	 * @throws StorageNotFoundException if the User cannot be found in the list
+	 */
 	public void delete(User user)
 		throws StorageNotFoundException
 	{
@@ -219,7 +305,12 @@ public class SerializedStorage
 		m_user.remove(userid);
 	}
 
-	// Stuff to do with Category objects
+	/**
+	 * Finds a given Category by its integer id and returns it.
+	 * 
+	 * @return Category object instance
+	 * @throws StorageNotFoundException if the category_id cannot be found
+	 */
 	public Category findCategory(int categoryid)
 		throws StorageNotFoundException
 	{
