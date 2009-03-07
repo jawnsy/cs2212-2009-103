@@ -1,6 +1,5 @@
-package ca.uwo.garage.storage;
+package ca.uwo.garage;
 
-import ca.uwo.garage.GarageException;
 
 public class PrinterException extends GarageException {
 	private static final long serialVersionUID = 1L;
