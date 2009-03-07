@@ -172,30 +172,71 @@ public class User
 		return false;
 	}
 
+	/**
+	 * This method verifies that a phone number is valid (currently only checks that it is 10 digits
+	 * and numeric), and sets it for this User.
+	 * 
+	 * @param phoneNumber The new phone number to set for this user, as a 10-digit string
+	 * @throws UserException if the phone number appears invalid for some reason
+	 */
 	public void phone(String phoneNumber)
 		throws UserException
 	{
-		if (phoneNumber == null || phoneNumber.length() == PHONENUMLEN)
+		if (phoneNumber == null || phoneNumber.length() != PHONENUMLEN)
 			throw new UserException("Phone numbers must be exactly " + PHONENUMLEN + " numbers long");
+
+		// Check that each digit looks like a number
+		for (int i = 0; i < phoneNumber.length(); i++) {
+			char ch = phoneNumber.charAt(i);
+			if (ch < 48 /* 0 */ || ch > 57 /* 9 */)
+				throw new UserException("Phone number contains an invalid character: " + ch);
+		}
 
 		m_phone = phoneNumber;
 	}
+
+	/**
+	 * This method simply returns the current phone number associated with this user,
+	 * as a 10-digit string. It may be null if no phone number has been set yet.
+	 * 
+	 * @return the User's phone number (or null)
+	 */
 	public String phone() {
 		return m_phone;
 	}
 
+	/**
+	 * Returns a Zoom object associated with this user, which specifies this user's
+	 * default Zoom level.
+	 * 
+	 * @return Zoom object associated with this User
+	 */
 	public Zoom zoom() {
 		if (m_zoom == null)
 			m_zoom = new Zoom();
 		return m_zoom;
 	}
 
+	/**
+	 * Returns a GeoPosition object associated with this user, which specifies this user's
+	 * default home GeoPosition.
+	 * 
+	 * @return home GeoPosition object associated with this User
+	 */
 	public GeoPosition home() {
 		if (m_home == null)
 			m_home = new GeoPosition();
 		return m_home;
 	}
 
+	/**
+	 * Returns something like a string representation of this User. Currently, it just
+	 * gives the user's id, but this behaviour may be changed in the future. Don't rely
+	 * on it for anything except displaying some general information to the user, or
+	 * for debugging purposes.
+	 * 
+	 * @return A string describing this User
+	 */
 	public String toString() {
 		return m_userid;
 	}

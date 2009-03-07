@@ -21,7 +21,7 @@ public class Cache<T>
 	private TreeMap<String, CacheObject<T>> m_cache; // String key; CacheObject values
 	private transient int m_hits, m_misses; // cache hits & misses
 
-	public Cache(Storage stor) {
+	public Cache() {
 		// Create a new Daemon thread (ie, does not prolong application run time)
 		m_cleaner = new Timer(true);
 		m_cleaner.schedule(new ExpireTask(), 0, 60); // start immediately, repeat every 60 seconds
