@@ -110,6 +110,18 @@ public class GeoPosition {
 	}
 
 	/**
+	 * This method compares two GeoPosition objects to determine if they
+	 * are semantically identical
+	 * @param other The second GeoPosition object
+	 * @return A boolean indicating if they are equal
+	 */
+	public boolean equals(GeoPosition other)
+	{
+		return (other.latitude() == m_latitude &&
+				other.longitude() == m_longitude);
+	}
+
+	/**
 	 * This method returns a string displaying the coordinates
 	 * of a GeoPosition object
 	 * @return the string displaying the coordinates

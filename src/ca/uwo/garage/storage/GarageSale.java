@@ -26,6 +26,7 @@ public class GarageSale
 	private Date m_datetime; // date and time of the Garage Sale
 	private Set<Category> m_categories; // this GarageSale's categories
 	private String m_note; // a note for the GarageSale
+	private int m_id; // a unique id
 
 	private static final int MAXADDRESSLEN = 50;
 	private static final int MAXCITYLEN    = 20;
@@ -276,5 +277,19 @@ public class GarageSale
 	 */
 	public String note() {
 		return m_note;
+	}
+
+	/**
+	 * PACKAGE-SCOPED METHOD
+	 * 
+	 * This id method is capable of setting an id. It is important that only other classes
+	 * in this PACKAGE may access this constructor -- namely, the Storage class.
+	 * 
+	 * It assumes that the id is valid, and so does not do any error checking.
+	 * 
+	 * @param id The unique garagesale_id pertaining to this GarageSale
+	 */
+	void id(int id) {
+		m_id = id;
 	}
 }
