@@ -80,6 +80,17 @@ public class Category
 		m_name = name;
 	}
 
+	/**
+	 * This provides an override that provides a human-readable version of a Category
+	 * object, particularly for debugging purposes. It shows the Category's unique id
+	 * as well as its human-friendly name.
+	 * 
+	 * @returns the category ID and name
+	 */
+	public String toString() {
+		return m_id + ": " + m_name;
+	}
+
 	// these are package methods; only the Storage system is allowed to assign an id
 	/**
 	 * PACKAGE-SCOPED METHOD
