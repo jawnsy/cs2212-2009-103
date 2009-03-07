@@ -7,11 +7,12 @@ import ca.uwo.garage.storage.GarageSale;
 /**
  * this interface is used to provide method to print
  * the garage sale info into HTML format
- * @author Jason Lu
- * @version 1.0
+ * @author Jason Lu, Jonathan Yu
+ * @version $Revision$
  */
 
-public interface Printer {
+public interface Printer
+{
 //HELPER METHOD****************************************
 	/**
 	 * this print method print a single garage sale information
@@ -19,7 +20,7 @@ public interface Printer {
 	 * @param garageSale the GarageSale object to be printed out
 	 * @throws PrinterException 
 	 */
-	void print(GarageSale garageSale)
+	public abstract void print(GarageSale garageSale)
 		throws PrinterException;
 	
 	/**
@@ -28,7 +29,7 @@ public interface Printer {
 	 * @param sales Collection of GarageSale objects
 	 * @throws PrinterException
 	 */
-	void print(Collection sales)
+	public abstract void print(Collection<GarageSale> sales)
 		throws PrinterException;
 
 }
