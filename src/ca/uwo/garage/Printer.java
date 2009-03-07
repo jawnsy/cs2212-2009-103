@@ -1,6 +1,8 @@
-package ca.uwo.garage.storage;
+package ca.uwo.garage;
 
 import java.util.Collection;
+
+import ca.uwo.garage.storage.GarageSale;
 
 /**
  * this interface is used to provide method to print
