@@ -45,7 +45,7 @@ public class User
 		throws UserException
 	{
 		if (userid == null || userid.isEmpty())
-			throw new UserException("The userid parameter cannot be null or empty");
+			throw new UserException("The userid parameter cannot be blank");
 
 		if (userid.length() != USERIDLEN)
 			throw new UserException("The specified userid must be exactly " + USERIDLEN + "characters long");
@@ -73,7 +73,7 @@ public class User
 		throws UserException
 	{
 		if (name == null || name.isEmpty())
-			throw new UserException("The name parameter cannot be null or empty");
+			throw new UserException("The name parameter cannot be blank");
 
 		if (name.length() > NAMELEN)
 			throw new UserException("The specified name is too long");
@@ -100,7 +100,7 @@ public class User
 		throws UserException
 	{
 		if (name == null || name.isEmpty())
-			throw new UserException("The name parameter cannot be null or empty");
+			throw new UserException("The name parameter cannot be blank");
 
 		if (name.length() > NAMELEN)
 			throw new UserException("The specified name is too long");
@@ -151,7 +151,7 @@ public class User
 		throws UserException
 	{
 		if (passphrase == null || passphrase.isEmpty())
-			throw new UserException("The password parameter cannot be null or empty");
+			throw new UserException("The password parameter cannot be blank");
 
 		if (passphrase.length() != PASSWORDLEN)
 			throw new UserException("The specified password must be exactly " + PASSWORDLEN + "characters long");
