@@ -42,13 +42,13 @@ public class User
 	 * @throws UserIdException if userid is null, empty or not USERIDLEN characters long
 	 */
 	public User(String userid)
-		throws UserIdException
+		throws UserException
 	{
 		if (userid == null || userid.isEmpty())
-			throw new UserIdException("The userid parameter cannot be null or empty");
+			throw new UserException("The userid parameter cannot be null or empty");
 
 		if (userid.length() != USERIDLEN)
-			throw new UserIdException("The specified userid must be exactly " + USERIDLEN + "characters long");
+			throw new UserException("The specified userid must be exactly " + USERIDLEN + "characters long");
 
 		m_userid = userid;
 		m_password = "aaa";
@@ -70,13 +70,13 @@ public class User
 	 * @throws UserNameException if name is null, empty or longer than NAMELEN characters
 	 */
 	public void first_name(String name)
-		throws UserNameException
+		throws UserException
 	{
 		if (name == null || name.isEmpty())
-			throw new UserNameException("The name parameter cannot be null or empty");
+			throw new UserException("The name parameter cannot be null or empty");
 
 		if (name.length() > NAMELEN)
-			throw new UserNameException("The specified name is too long");
+			throw new UserException("The specified name is too long");
 
 		m_lastName = name;
 	}
@@ -97,13 +97,13 @@ public class User
 	 * @throws UserNameException if name is null, empty or longer than NAMELEN characters
 	 */
 	public void last_name(String name)
-		throws UserNameException
+		throws UserException
 	{
 		if (name == null || name.isEmpty())
-			throw new UserNameException("The name parameter cannot be null or empty");
+			throw new UserException("The name parameter cannot be null or empty");
 
 		if (name.length() > NAMELEN)
-			throw new UserNameException("The specified name is too long");
+			throw new UserException("The specified name is too long");
 
 		m_lastName = name;
 	}
@@ -148,13 +148,13 @@ public class User
 	 * @throws UserPasswordException if the password is null, empty or not equal to PASSWORDLEN characters
 	 */
 	public void password(String passphrase)
-		throws UserPasswordException
+		throws UserException
 	{
 		if (passphrase == null || passphrase.isEmpty())
-			throw new UserPasswordException("The password parameter cannot be null or empty");
+			throw new UserException("The password parameter cannot be null or empty");
 
 		if (passphrase.length() != PASSWORDLEN)
-			throw new UserPasswordException("The specified password must be exactly " + PASSWORDLEN + "characters long");
+			throw new UserException("The specified password must be exactly " + PASSWORDLEN + "characters long");
 
 		m_password = passphrase;
 	}
