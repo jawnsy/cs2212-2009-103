@@ -99,14 +99,24 @@ public class GeoPosition {
 	}
 
 	/**
-	 * This method calculates the Euclidean distance between two
-	 * GeoPosition objects
+	 * This method calculates the distance between two GeoPosition 
+	 * objects in kilometers using the Haversine formula
 	 * @param other The second GeoPosition object
-	 * @return the Euclidean distance between the two GeoPosition objects
+	 * @return the distance between the two GeoPosition objects
 	 */
 	public double distance(GeoPosition other)
 	{
-		return 0.0;
+		final int RADIUS = 6371; // The radius of the earth in kilometers
+		
+		// Get the distance between latitudes and longitudes
+		double deltaLat = Math.toRadians(this.latitude() - other.latitude());
+		double deltaLong = Math.toRadians(this.longitude() - other.longitude());
+		
+		// Apply the Haversine function
+		double a = Math.sin(deltaLat/2) * Math.sin(deltaLat/2) +
+		        Math.cos(Math.toRadians(other.latitude())) * Math.cos(Math.toRadians(this.latitude())) * 
+		        Math.sin(deltaLong/2) * Math.sin(deltaLong/2); 
+		return RADIUS * 2 * Math.asin(Math.sqrt(a));
 	}
 
 	/**
@@ -141,5 +151,21 @@ public class GeoPosition {
 			str.append(-m_longitude + "W");
 
 		return str.toString();
+	}
+	
+	public static void main(String[] args)
+	{
+		try
+		{
+			GeoPosition test1 = new GeoPosition(-67, 24);
+			GeoPosition test2 = new GeoPosition(-67, 34);
+			System.out.println(test1.distance(test2));
+		}
+		
+		catch (Exception e)
+		{
+			
+		}
+		
 	}
 }
