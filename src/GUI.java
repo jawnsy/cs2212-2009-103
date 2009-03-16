@@ -959,8 +959,10 @@ public class GUI implements ActionListener
 			
 			infoPanel.add(garageRankPanel);
 			
-			JLabel catLabel = new JLabel(" View by categories:");
-			infoPanel.add(catLabel);
+			// Categories
+			JCheckBox catCheckBox = new JCheckBox(" View by categories:");
+			catCheckBox.setBackground(new Color(132, 227, 255));
+			infoPanel.add(catCheckBox);
 			
 			categories = new JButton("Click to select categories");
 			infoPanel.add(categories);
