@@ -895,7 +895,7 @@ public class GUI implements ActionListener
 			infoPanel.add(userTextField);
 			
 			//Date
-			JCheckBox dateCheckBox = new JCheckBox(" View by date range  (DD/MM/YY  to  DD/MM/YY):");
+			JCheckBox dateCheckBox = new JCheckBox(" View by date range  (DD/MM/YYYY  to  DD/MM/YYYY):");
 			dateCheckBox.setBackground(new Color(132, 227, 255));
 			infoPanel.add(dateCheckBox);
 			
