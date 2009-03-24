@@ -22,6 +22,7 @@ public class GarageSaleLoader
 	{
 		m_filename = filename;
 		m_handle = new FileReader(filename);
+		m_sales = new LinkedList<GarageSale>();
 	}
 	public GarageSaleLoader(String filename, Storage storage)
 	throws IOException
@@ -29,6 +30,7 @@ public class GarageSaleLoader
 		m_filename = filename;
 		m_handle = new FileReader(filename);
 		m_storage = storage;
+		m_sales = new LinkedList<GarageSale>();
 	}
 
 	public void storage(Storage storage) 
@@ -74,7 +76,6 @@ public class GarageSaleLoader
 			
 			while(currentLine != null)
 			{
-				System.out.println("Test");
 				if (currentLine.startsWith("area: "))
 				{
 					double longitude, latitude;
@@ -91,42 +92,8 @@ public class GarageSaleLoader
 						throw new IOException("Format error at line " + currentLineNum);
 					}
 
-					// Check to see if the longitude has a decimal point
-					if ((spaceIndex - decimalIndex) < 0)
-					{
-						throw new IOException("Format error at line " + currentLineNum);
-					}
-
-					// Test to see if the longitude has 1,2 or 3 digits preceding the decimal place
-					if (decimalIndex < 1 || decimalIndex > 3)
-					{
-						throw new IOException("Format error at line " + currentLineNum + ": The longitutde and " +
-						"latitude values must have 1,2 or 3 digits prior to the decimal point.");
-					}
-
-					// Test to see if the longitude has 3,4,5 or 6 digits after the decimal place
-					if ((spaceIndex - decimalIndex) < 4 || (spaceIndex - decimalIndex) > 7)
-					{
-						throw new IOException("Format error at line " + currentLineNum + ": The longitutde and " +
-						"latitude values must have 3,4,5 or 6 digits after the decimal point.");
-					}
-
-					// Get the longitude value
-					try
-					{
-						longitude = Double.parseDouble(currentLine.substring(0, spaceIndex));
-					}
-					catch (Exception e)
-					{
-						throw new IOException("Format error at line " + currentLineNum + ": The longitude contains " +
-						"invalid characters");
-					}
-
-					currentLine = currentLine.substring(spaceIndex + 1);
-					decimalIndex = currentLine.indexOf('.');
-
 					// Check to see if the latitude has a decimal point
-					if (decimalIndex < 0)
+					if ((spaceIndex - decimalIndex) < 0)
 					{
 						throw new IOException("Format error at line " + currentLineNum);
 					}
@@ -139,7 +106,7 @@ public class GarageSaleLoader
 					}
 
 					// Test to see if the latitude has 3,4,5 or 6 digits after the decimal place
-					if (currentLine.substring(decimalIndex).length() < 4 || currentLine.substring(decimalIndex).length() > 7)
+					if ((spaceIndex - decimalIndex) < 4 || (spaceIndex - decimalIndex) > 7)
 					{
 						throw new IOException("Format error at line " + currentLineNum + ": The longitutde and " +
 						"latitude values must have 3,4,5 or 6 digits after the decimal point.");
@@ -148,7 +115,41 @@ public class GarageSaleLoader
 					// Get the latitude value
 					try
 					{
-						latitude = Double.parseDouble(currentLine);
+						latitude = Double.parseDouble(currentLine.substring(0, spaceIndex));
+					}
+					catch (Exception e)
+					{
+						throw new IOException("Format error at line " + currentLineNum + ": The longitude contains " +
+						"invalid characters");
+					}
+
+					currentLine = currentLine.substring(spaceIndex + 1);
+					decimalIndex = currentLine.indexOf('.');
+
+					// Check to see if the longitude has a decimal point
+					if (decimalIndex < 0)
+					{
+						throw new IOException("Format error at line " + currentLineNum);
+					}
+
+					// Test to see if the longitude has 1,2 or 3 digits preceding the decimal place
+					if (decimalIndex < 1 || decimalIndex > 3)
+					{
+						throw new IOException("Format error at line " + currentLineNum + ": The longitutde and " +
+						"latitude values must have 1,2 or 3 digits prior to the decimal point.");
+					}
+
+					// Test to see if the longitude has 3,4,5 or 6 digits after the decimal place
+					if (currentLine.substring(decimalIndex).length() < 4 || currentLine.substring(decimalIndex).length() > 7)
+					{
+						throw new IOException("Format error at line " + currentLineNum + ": The longitutde and " +
+						"latitude values must have 3,4,5 or 6 digits after the decimal point.");
+					}
+
+					// Get the longitude value
+					try
+					{
+						longitude = Double.parseDouble(currentLine);
 					}
 					catch (Exception e)
 					{
@@ -172,7 +173,7 @@ public class GarageSaleLoader
 					throw new IOException("Format error at line " + currentLineNum +
 					": This line should start with \"area: \"");
 				}
-
+				
 				////////////////////////Read the "stre: " line///////////////////////////////
 				currentLine = reader.readLine();
 				currentLineNum++;
@@ -209,7 +210,7 @@ public class GarageSaleLoader
 					throw new IOException("Format error at line " + currentLineNum +
 					": This line should start with \"stre: \"");
 				}
-
+				
 				////////////////////////Read the "city: " line///////////////////////////////
 				currentLine = reader.readLine();
 				currentLineNum++;
@@ -246,7 +247,7 @@ public class GarageSaleLoader
 					throw new IOException("Format error at line " + currentLineNum +
 					": This line should start with \"city: \"");
 				}
-
+				
 				////////////////////////Read the "prov: " line///////////////////////////////
 				currentLine = reader.readLine();
 				currentLineNum++;
@@ -468,7 +469,7 @@ public class GarageSaleLoader
 					throw new IOException("Format error at line " + currentLineNum +
 							": This line should start with \"time: \"");
 				}
-				
+			
 				this.m_sales.add(currentSale);
 				
 				// Read the "area: " line for the next garage sale or exit the loop if the 
@@ -517,6 +518,10 @@ public class GarageSaleLoader
 		catch (IOException e)
 		{
 			System.out.print(e.getMessage());
+		}
+		catch (NullPointerException e)
+		{
+			
 		}
 	}
 }
