@@ -21,7 +21,7 @@ public class GarageSale
 {
 	private static final long serialVersionUID = 1L;
 
-	private GeoPosition m_location; // The coordinate of our GarageSale
+	private GarageGeoPos m_location; // The coordinate of our GarageSale
 	private String m_address, m_municipality, m_province; // Geocode type stuff
 	private Date m_datetime; // date and time of the Garage Sale
 	private Set<Category> m_categories; // this GarageSale's categories
@@ -61,7 +61,7 @@ public class GarageSale
 	 * @param waypoint A GeoPosition containing the coordinates of the garage sale.
 	 * @return A new GarageSale object
 	 */
-	public GarageSale(GeoPosition waypoint)
+	public GarageSale(GarageGeoPos waypoint)
 	{
 		this();
 		m_location = waypoint;
@@ -77,9 +77,9 @@ public class GarageSale
 	 * @throws A GeoPositionException if the GeoPosition is invalid
 	 */
 	public GarageSale(double latitude, double longitude)
-		throws GeoPositionException
+		throws GarageGeoPosException
 	{
-		this(new GeoPosition(latitude, longitude));
+		this(new GarageGeoPos(latitude, longitude));
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class GarageSale
 	 * 
 	 * @param position A GeoPosition specifying where this GarageSale is located
 	 */
-	public void location(GeoPosition position)
+	public void location(GarageGeoPos position)
 	{
 		m_location = position;
 	}
@@ -101,15 +101,15 @@ public class GarageSale
 	 * @throws A GeoPositionException if the coordinates are invalid
 	 */
 	public void location(double latitude, double longitude)
-		throws GeoPositionException
+		throws GarageGeoPosException
 	{
-		m_location = new GeoPosition(latitude, longitude);
+		m_location = new GarageGeoPos(latitude, longitude);
 	}
 
 	/**
 	 * @return The position of the GarageSale (the Waypoint)
 	 */
-	public GeoPosition location()
+	public GarageGeoPos location()
 	{
 		return m_location;
 	}
