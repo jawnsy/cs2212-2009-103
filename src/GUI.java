@@ -914,6 +914,9 @@ public class GUI implements ActionListener
 			this.getContentPane().add(mapPanel);
 			
 	        jxMapKit.setCenterPosition(new GarageGeoPos(43.005, -81.275));
+	        
+	        
+	        
 	        jxMapKit.setZoom(3);
 	        jxMapKit.setPreferredSize(new Dimension(800,400));
 	        
