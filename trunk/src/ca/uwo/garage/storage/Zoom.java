@@ -14,10 +14,10 @@ public class Zoom {
 	
 	/**
 	* Constructor for objects of class Zoom,
-	* initialize zoom level to 1
+	* initialize zoom level to minimum
 	*/
 	public Zoom() {
-		m_level = 1;
+		m_level = Z_MIN;
 	}
 // ACCESSOR METHODS ***********************************
 	/**
