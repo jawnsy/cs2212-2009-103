@@ -1,3 +1,5 @@
+package ca.uwo.garage;
+
 import java.util.HashMap; 
 import java.util.Map; 
  

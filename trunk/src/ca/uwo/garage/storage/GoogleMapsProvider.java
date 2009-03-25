@@ -1,4 +1,7 @@
+package ca.uwo.garage.storage;
+
 import org.jdesktop.swingx.mapviewer.TileFactoryInfo; 
+import ca.uwo.garage.*;
  
 public class GoogleMapsProvider  extends  AbstractMapProvider { 
  

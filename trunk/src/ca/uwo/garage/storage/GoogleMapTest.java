@@ -1,3 +1,5 @@
+package ca.uwo.garage.storage;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;

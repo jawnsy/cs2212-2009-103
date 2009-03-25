@@ -1,3 +1,5 @@
+package ca.uwo.garage;
+
 import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
 
 public interface MapProvider { 
