@@ -162,7 +162,7 @@ public class GarageSaleLoader
 					{
 						currentSale.location(latitude, longitude);
 					}
-					catch (GeoPositionException e)
+					catch (GarageGeoPosException e)
 					{
 						throw new IOException("Format error at line " + currentLineNum + 
 						": The longitude and latitude values are invalid");

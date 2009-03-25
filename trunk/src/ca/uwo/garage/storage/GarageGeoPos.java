@@ -5,9 +5,13 @@
 * @version Version 1.0
 */ 
 package ca.uwo.garage.storage;
+import org.jdesktop.swingx.mapviewer.GeoPosition;
 
-public class GeoPosition {
-	
+
+public class GarageGeoPos extends GeoPosition
+{
+	private static double uwo_lat=43.011583;
+	private static double uwo_long=-81.257586;
 	//instance variables **********************************
 	private double m_latitude; 		// The latitude coordinate. Positive is North
 	private double m_longitude; 	// The Longitude coordinate. Positive is East
@@ -16,13 +20,15 @@ public class GeoPosition {
 	 * Constructor for objects of class GeoPosition creates a new 
 	 * GeoPosition with default coordinates (43.011583,-81.257586)
 	 */
-	public GeoPosition() 
+	public GarageGeoPos() 
 	{
 		/* These are the coordinates of the University of Western Ontario
 		 * campus in London, ON. 1151 Richmond Street
 		 */
-		m_latitude = 43.011583;
-		m_longitude = -81.257586;
+		super(uwo_lat, uwo_long);
+		m_latitude = uwo_lat;
+		m_longitude = uwo_long;
+		
 	}
 
 	/**
@@ -32,10 +38,10 @@ public class GeoPosition {
 	 * @param m_latitude Latitude value of coordinate
 	 * @param m_longitude Longitude value of coordinate
 	 */
-	public GeoPosition(double latitude, double longitude)
-		throws GeoPositionException
+	public GarageGeoPos(double latitude, double longitude)
+		throws GarageGeoPosException
 	{
-		this();
+		super(latitude,longitude);
 		latlong(latitude, longitude);
 	}
 
@@ -64,10 +70,10 @@ public class GeoPosition {
 	 * @param latitude The latitude value
 	 */
 	public void latitude(double coord)
-		throws GeoPositionException
+		throws GarageGeoPosException
 	{
 		if (Math.abs(coord) > 90)
-			throw new GeoPositionException("Latitude values cannot exceed +/- 90 degrees");
+			throw new GarageGeoPosException("Latitude values cannot exceed +/- 90 degrees");
 
 		m_latitude = coord;
 	}
@@ -77,10 +83,10 @@ public class GeoPosition {
 	 * @param longitude The longitude value
 	 */
 	public void longitude(double coord)
-		throws GeoPositionException
+		throws GarageGeoPosException
 	{
 		if (Math.abs(coord) > 180)
-			throw new GeoPositionException("Longitude values cannot exceed +/- 180 degrees");
+			throw new GarageGeoPosException("Longitude values cannot exceed +/- 180 degrees");
 
 		m_longitude = coord;
 	}
@@ -92,7 +98,7 @@ public class GeoPosition {
 	 * @param longitude The longitude value
 	 */
 	public void latlong(double latitude, double longitude)
-		throws GeoPositionException
+		throws GarageGeoPosException
 	{
 		latitude(latitude);
 		longitude(longitude);
@@ -104,7 +110,7 @@ public class GeoPosition {
 	 * @param other The second GeoPosition object
 	 * @return the distance between the two GeoPosition objects
 	 */
-	public double distance(GeoPosition other)
+	public double distance(GarageGeoPos other)
 	{
 		final int RADIUS = 6371; // The radius of the earth in kilometers
 		
@@ -125,7 +131,7 @@ public class GeoPosition {
 	 * @param other The second GeoPosition object
 	 * @return A boolean indicating if they are equal
 	 */
-	public boolean equals(GeoPosition other)
+	public boolean equals(GarageGeoPos other)
 	{
 		return (other.latitude() == m_latitude &&
 				other.longitude() == m_longitude);
@@ -157,8 +163,8 @@ public class GeoPosition {
 	{
 		try
 		{
-			GeoPosition test1 = new GeoPosition(-67, 24);
-			GeoPosition test2 = new GeoPosition(-67, 34);
+			GarageGeoPos test1 = new GarageGeoPos(-67, 24);
+			GarageGeoPos test2 = new GarageGeoPos(-67, 34);
 			System.out.println(test1.distance(test2));
 		}
 		

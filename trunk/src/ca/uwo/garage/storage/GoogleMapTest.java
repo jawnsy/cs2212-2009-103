@@ -32,9 +32,9 @@ public class GoogleMapTest
          // Set up the map viewer, and give a location and zoom level for something familiar.
          
          jxMapKit.setTileFactory(tileFactory);
-         jxMapKit.setCenterPosition(new GeoPosition(43.005, -81.275));
+         jxMapKit.setCenterPosition(new GarageGeoPos(43.005, -81.275));
          jxMapKit.setZoom(3);
-
+         
          // Add listener to kill the things if the window dies.
          
          frame.addWindowListener(new WindowAdapter() {

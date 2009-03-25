@@ -27,7 +27,7 @@ public class User
 
 	// these are all package variables so that they can be modified by Storage classes
 	String m_userid, m_firstName, m_lastName, m_password, m_phone;
-	transient GeoPosition m_home;
+	transient GarageGeoPos m_home;
 	transient Zoom m_zoom;
 
 	/**
@@ -223,9 +223,9 @@ public class User
 	 * 
 	 * @return home GeoPosition object associated with this User
 	 */
-	public GeoPosition home() {
+	public GarageGeoPos home() {
 		if (m_home == null)
-			m_home = new GeoPosition();
+			m_home = new GarageGeoPos();
 		return m_home;
 	}
 
