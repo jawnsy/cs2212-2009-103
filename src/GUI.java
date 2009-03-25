@@ -3,8 +3,23 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.jdesktop.swingx.*;
+import org.jdesktop.swingx.mapviewer.*;
 
 import javax.swing.*;
+
+import org.jdesktop.swingx.mapviewer.DefaultTileFactory;
+import org.jdesktop.swingx.mapviewer.TileFactory;
+import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
+import org.jdesktop.swingx.mapviewer.Waypoint;
+import org.jdesktop.swingx.mapviewer.WaypointPainter;
+
+import ca.uwo.garage.storage.GarageGeoPos;
+import ca.uwo.garage.storage.GarageGeoPosException;
+import ca.uwo.garage.storage.GoogleMapsProvider;
 
 public class GUI implements ActionListener
 {
@@ -18,31 +33,57 @@ public class GUI implements ActionListener
 	private static SelectCatWindow selectCatWindow;
 	private static BuyerWindow buyerWindow;
 	private static GarageInfoWindow garageInfoWindow;
+	private static MapHolder mapHolder;
+	private static TileFactory tileFactory;
+	private static JXMapKit jxMapKit;
+	
+	private static TileFactory initMapProvider(){
+		//initialize map provider
+		GoogleMapsProvider map = new GoogleMapsProvider();
+        TileFactoryInfo tileProviderInfo = map.getTileProviderInfo();
+        return (new DefaultTileFactory (tileProviderInfo));
+		
+	}	
 	
 	public GUI()
 	{
-		startWindow = new StartWindow();
-				
-		addNewUserWindow = new AddNewUserWindow();
-		
-		updateUserWindow = new UpdateUserWindow();
-		
-		administratorWindow = new AdministratorWindow();
-		administratorWindow.catAddNew.addActionListener(this);
-		
-		sellerWindow = new SellerWindow();
-		
-		addNewGarageWindow = new AddNewGarageWindow();
-		
-		updateGarageWindow = new UpdateGarageWindow();
-		
-		selectCatWindow = new SelectCatWindow();
-		
-		buyerWindow = new BuyerWindow();
-		
-		garageInfoWindow = new GarageInfoWindow();
+//		startWindow = new StartWindow();
+//				
+//		addNewUserWindow = new AddNewUserWindow();
+//		
+//		updateUserWindow = new UpdateUserWindow();
+//		
+//		administratorWindow = new AdministratorWindow();
+//		administratorWindow.catAddNew.addActionListener(this);
+//		
+//		sellerWindow = new SellerWindow();
+//		
+//		addNewGarageWindow = new AddNewGarageWindow();
+//		
+//		updateGarageWindow = new UpdateGarageWindow();
+//		
+//		selectCatWindow = new SelectCatWindow();
+//		
+//		buyerWindow = new BuyerWindow();
+//		
+//		garageInfoWindow = new GarageInfoWindow();
+//		
+//		mapHolder = new MapHolder();
+		tileFactory=initMapProvider();
+		jxMapKit = new JXMapKit();
+        jxMapKit.setTileFactory(initMapProvider());
+        
 	}
 	
+	public class MapHolder extends JXMapKit {
+		
+		public MapHolder (){
+	
+	        
+		}
+        
+		
+	}
 	public class StartWindow extends JFrame
 	{
 		private JButton login, exit;
@@ -835,7 +876,7 @@ public class GUI implements ActionListener
 	{
 		private JButton view, categories;
 		
-		public BuyerWindow()
+		public BuyerWindow() throws GarageGeoPosException
 		{		
 			this.addWindowListener(new WindowAdapter() 
 			{
@@ -849,7 +890,7 @@ public class GUI implements ActionListener
 			this.setBackground(new Color(132, 227, 255));
 			
 			JMenuBar menuBar = new JMenuBar();
-			menuBar.setBorder(BorderFactory.createLineBorder(Color.black));
+			menuBar.setBorder(BorderFactory.createMatteBorder(0,0,1,0,Color.black));
 			
 			JMenu menu = new JMenu("Menu");
 			JMenuItem buyerMode = new JMenuItem("Switch to Seller Mode");	
@@ -861,17 +902,38 @@ public class GUI implements ActionListener
 			menu.add(exit);
 			
 			this.setJMenuBar(menuBar);
+			JPanel contentPane=new JPanel();
+			contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+			this.setContentPane(contentPane);
 			
-			JPanel panel = new JPanel(new BorderLayout(0,15));;
+			JPanel panel = new JPanel(new BorderLayout(0,15));
 			panel.setBackground(new Color(132, 227, 255));
-			this.add(panel);
+			this.getContentPane().add(panel);
+			JPanel mapPanel= new JPanel(new BorderLayout(0,15));
+			mapPanel.setBorder(BorderFactory.createMatteBorder(1,0,0,0,Color.black));
+			this.getContentPane().add(mapPanel);
+			
+	        jxMapKit.setCenterPosition(new GarageGeoPos(43.005, -81.275));
+	        jxMapKit.setZoom(3);
+	        jxMapKit.setPreferredSize(new Dimension(800,400));
+	        
+	        Set<Waypoint> waypoints = new HashSet<Waypoint>();
+	        waypoints.add(new Waypoint(43.005, -81.275));
+	        
+	        //crate a WaypointPainter to draw the points
+	        WaypointPainter<JXMapViewer> painter = new WaypointPainter<JXMapViewer>();
+
+	        painter.setWaypoints(waypoints);
+	        jxMapKit.getMainMap().setOverlayPainter(painter);
+	        
+	        mapPanel.add(jxMapKit);
 			
 			view = new JButton("View Garage Sales");
 			
 			JLabel label = new JLabel("Select zero or many filters.", JLabel.CENTER);
 			label.setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
 			panel.add(label, BorderLayout.NORTH);
-			
+						
 			// Info Panel
 			JPanel infoPanel = new JPanel(new GridLayout(6,2,5,5));
 			infoPanel.setBackground(new Color(132, 227, 255));
@@ -983,6 +1045,11 @@ public class GUI implements ActionListener
 			
 			this.setLocationRelativeTo(null);
 			this.setLocation(this.getLocationOnScreen().x, this.getLocationOnScreen().y);
+			
+			
+			
+   		    
+
 		}
 	}
 	
@@ -1066,8 +1133,13 @@ public class GUI implements ActionListener
 		JOptionPane.showInputDialog(startWindow, "Enter a new Category", "Change Password", JOptionPane.PLAIN_MESSAGE);
 	}
 	
-	public static void main(String[] args)
+
+	
+	public static void main(String[] args) throws GarageGeoPosException
 	{
-		GUI controller = new GUI();	
+		
+		GUI controller = new GUI();
+		buyerWindow= controller.new BuyerWindow();
+		
 	}
 }
