@@ -6,9 +6,10 @@ public class View
 	extends JFrame
 {
 	private static final long serialVersionUID = 1L;
-
+	protected Controller m_control;
+	
 	public View(Controller control) {
-		
+		m_control = control;
 	}
 	public void reset() {
 		

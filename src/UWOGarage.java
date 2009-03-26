@@ -1,59 +1,11 @@
+import ca.uwo.garage.AdminController;
+import ca.uwo.garage.AdminView;
+import ca.uwo.garage.Controller;
+import ca.uwo.garage.View;
+
 public class UWOGarage {
-	
-//	View test;
-
 	public static void main(String[] args) {
-	    
-
-
-
-        
-        
-        //jxMapKit.
-			
-/*		// Driver Test
-		SerializedStorage storage = new SerializedStorage();
-		
-		User testID = null;
-		
-		try 
-		{
-			testID = new User("test");
-		} 
-		catch (UserException e) 
-		{
-			e.printStackTrace();
-		}
-		
-		try 
-		{
-			storage.connect();
-		} catch (StorageException e) 
-		{
-			e.printStackTrace();
-		}
-		
-		try 
-		{
-			storage.store(testID);
-		}
-		catch (StorageKeyException e) 
-		{
-			e.printStackTrace();
-		}
-		
-		try 
-		{
-			if (storage.findUser(testID.id()) != null)
-				System.out.println("Driver test passed.");
-			
-			else System.out.println("Driver test failed.");
-		} 
-		catch (StorageNotFoundException e) 
-		{
-			e.printStackTrace();
-		}
-*/
-		
+		Controller control = new AdminController();
+		View view = new AdminView(control);
 	}
 }
