@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.HashSet;
@@ -20,6 +21,7 @@ import org.jdesktop.swingx.mapviewer.WaypointPainter;
 import ca.uwo.garage.storage.GarageGeoPos;
 import ca.uwo.garage.storage.GarageGeoPosException;
 import ca.uwo.garage.storage.GoogleMapsProvider;
+import ca.uwo.garage.storage.HTMLPrinter;
 
 public class GUI implements ActionListener
 {
@@ -35,7 +37,7 @@ public class GUI implements ActionListener
 	private static GarageInfoWindow garageInfoWindow;
 	private static MapHolder mapHolder;
 	private static TileFactory tileFactory;
-	private static JXMapKit jxMapKit;
+	public static JXMapKit jxMapKit;
 	
 	private static TileFactory initMapProvider(){
 		//initialize map provider
@@ -893,13 +895,28 @@ public class GUI implements ActionListener
 			menuBar.setBorder(BorderFactory.createMatteBorder(0,0,1,0,Color.black));
 			
 			JMenu menu = new JMenu("Menu");
-			JMenuItem buyerMode = new JMenuItem("Switch to Seller Mode");	
+			JMenuItem buyerMode = new JMenuItem("Switch to Seller Mode");
+			JMenuItem print=new JMenuItem("Print");
 			JMenuItem exit = new JMenuItem("Exit");
-			
+			print.addActionListener(new ActionListener(){
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					if(e.getID()==MouseEvent.MOUSE_CLICKED){
+						//new HTMLPrinter(jxMapKit).print(garageSale);
+						
+					}
+				}
+				
+				
+			});
 			menuBar.add(menu);
 			menu.add(buyerMode);
 			menu.addSeparator();
+			menu.add(print);
+			menu.addSeparator();
 			menu.add(exit);
+			
 			
 			this.setJMenuBar(menuBar);
 			JPanel contentPane=new JPanel();
@@ -928,6 +945,7 @@ public class GUI implements ActionListener
 
 	        painter.setWaypoints(waypoints);
 	        jxMapKit.getMainMap().setOverlayPainter(painter);
+	        
 	        
 	        mapPanel.add(jxMapKit);
 			

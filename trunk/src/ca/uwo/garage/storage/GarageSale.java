@@ -292,4 +292,5 @@ public class GarageSale
 	void id(int id) {
 		m_id = id;
 	}
+	
 }
