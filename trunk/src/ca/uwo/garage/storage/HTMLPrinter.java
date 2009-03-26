@@ -56,8 +56,9 @@ public class HTMLPrinter implements Printer {
 
 	@Override
 	public void print(GarageSale garageSale) throws PrinterException {
-		
+		//string buffer to build the HTML file
 		StringBuffer strBuf =new StringBuffer();
+		//write html head part
 		strBuf.append(htmlHead);
 		
 		//write properties of the garagesale object
