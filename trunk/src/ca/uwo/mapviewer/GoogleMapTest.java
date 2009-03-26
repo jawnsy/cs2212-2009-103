@@ -1,10 +1,17 @@
-package ca.uwo.garage.storage;
+package ca.uwo.mapviewer;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import org.jdesktop.swingx.*;
-import org.jdesktop.swingx.mapviewer.*;
+
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import javax.swing.JFrame;
+
+import org.jdesktop.swingx.JXMapKit;
+import org.jdesktop.swingx.mapviewer.DefaultTileFactory;
+import org.jdesktop.swingx.mapviewer.TileFactory;
+import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
+
+import ca.uwo.garage.storage.GeoPosition;
 
 public class GoogleMapTest
    {
@@ -32,7 +39,7 @@ public class GoogleMapTest
          // Set up the map viewer, and give a location and zoom level for something familiar.
          
          jxMapKit.setTileFactory(tileFactory);
-         jxMapKit.setCenterPosition(new GarageGeoPos(43.005, -81.275));
+         jxMapKit.setCenterPosition(new GeoPosition(43.005, -81.275));
          jxMapKit.setZoom(3);
          
          // Add listener to kill the things if the window dies.

@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.TreeMap;
 
 /* The Serialized storage mechanism simply flattens data structures into the standard
@@ -30,6 +31,9 @@ public class SerializedStorage
 	private transient TreeMap<String, User> m_user;
 	private transient TreeMap<Integer, Category> m_category;
 	private transient TreeMap<Integer, GarageSale> m_sales;
+	private transient LinkedList<GarageSaleRank> m_ratings;
+	private transient TreeMap<User, LinkedList<GarageSaleRank>> m_ratingsByUser;
+	private transient TreeMap<GarageSale, LinkedList<GarageSaleRank>> m_ratingsBySale;
 	private transient SequenceSet m_sequence;
 
 	/**
@@ -40,6 +44,10 @@ public class SerializedStorage
 		m_user = new TreeMap<String, User>();
 		m_category = new TreeMap<Integer, Category>();
 		m_sales = new TreeMap<Integer, GarageSale>();
+
+		m_ratings = new LinkedList<GarageSaleRank>();
+		m_ratingsByUser = new TreeMap<User, LinkedList<GarageSaleRank>>();
+		m_ratingsBySale = new TreeMap<GarageSale, LinkedList<GarageSaleRank>>();
 	}
 
 	/**
@@ -146,6 +154,23 @@ public class SerializedStorage
 		save(out, m_user.values());
 		save(out, m_category.values());
 		save(out, m_sales.values());
+		save(out, m_ratings);
+	}
+	private void save(ObjectOutputStream out, LinkedList<GarageSaleRank> list)
+		throws IOException
+	{
+		// Write out the size of the block
+		out.writeInt(list.size());
+
+		// Dump everything in the Collection by iterating
+		Iterator<GarageSaleRank> iter = list.iterator();
+		while (iter.hasNext()) {
+			GarageSaleRank gsr = iter.next();
+			// Write out the GarageSale ID, UserID and Rank
+			out.writeInt(gsr.garageSale().id());
+			out.writeObject(gsr.user().id());
+			out.writeInt(gsr.rank());
+		}
 	}
 	private void save(ObjectOutputStream out, Collection<?> list)
 		throws IOException
@@ -184,6 +209,54 @@ public class SerializedStorage
 			}
 
 			// Read the GarageSale objects
+			size = in.readInt();
+			for (int i = 0; i < size; i++) {
+				GarageSale sale = (GarageSale) in.readObject();
+				m_sales.put(sale.id(), sale);
+			}
+
+			// Read the GarageSale ratings
+			size = in.readInt();
+			for (int i = 0; i < size; i++) {
+				int saleid = in.readInt();
+				String userid = (String)in.readObject();
+				int rank = in.readInt();
+
+				// This reduces memory usage since references will be kept
+				GarageSaleRank gsr;
+				GarageSale sale = null;
+				User user = null;
+
+				try {
+					sale = findGarageSale(saleid);
+				} catch (StorageNotFoundException e) {
+					System.err.println("Error: invalid garagesale id in database - " + saleid);
+					e.printStackTrace();
+					System.exit(1);
+				}
+
+				try {
+					user = findUser(userid);
+				} catch (StorageNotFoundException e) {
+					System.err.println("Error: invalid user id in database - " + userid);
+					e.printStackTrace();
+					System.exit(1);
+				}
+
+				gsr = new GarageSaleRank(sale, user);
+				try {
+					gsr.rank(rank);
+				} catch (GarageSaleRankInvalidException e) {
+					System.err.println("Error: invalid rank saved to database - " + rank);
+					e.printStackTrace();
+					System.exit(1);
+				}
+
+				// restore the rank
+				m_ratings.add(gsr);
+				m_ratingsByUser.get(user).add(gsr);
+				m_ratingsBySale.get(sale).add(gsr);
+			}
 		}
 		catch (ClassNotFoundException e) {
 			System.err.println("Error: Serialized Java class cannot be restored because of missing class");
@@ -202,6 +275,7 @@ public class SerializedStorage
 			m_user.isEmpty()     &&
 			m_category.isEmpty() &&
 			m_sales.isEmpty()    &&
+			m_ratings.isEmpty()  &&
 			m_sequence == null
 		);
 	}
@@ -226,7 +300,8 @@ public class SerializedStorage
 		return (
 			m_user.size() +
 			m_category.size() +
-			m_sales.size()
+			m_sales.size() +
+			m_ratings.size()
 		);
 	}
 
@@ -264,7 +339,6 @@ public class SerializedStorage
 	public boolean existsUser(String userid) {
 		return m_user.containsKey(userid);
 	}
-
 
 	/**
 	 * Get a list of all users. It is a Collection that may vary based on the
@@ -319,7 +393,7 @@ public class SerializedStorage
 		return m_category.get(categoryid);
 	}
 	public boolean existsCategory(int categoryid) {
-		return m_user.containsKey(categoryid);
+		return m_category.containsKey(categoryid);
 	}
 	public Collection<Category> listCategories() {
 		return m_category.values();
@@ -354,5 +428,91 @@ public class SerializedStorage
 			throw new StorageNotFoundException("categories", categoryid);
 
 		m_category.remove(categoryid);
+	}
+
+	public void store(GarageSale sale)
+		throws StorageFullException, StorageKeyException
+	{
+		int saleid = sale.id();
+
+		// We're trying to store one that doesn't yet have an id, generate one
+		if (saleid == -1) {
+			saleid = m_sequence.nextval("category_id");
+			sale.id(saleid);
+		}
+
+		/* The saleid already exists - this shouldn't happen since the sequence generator will
+		 * guarantee uniqueness
+		 */
+		if (m_sales.containsKey(saleid)) {
+			throw new StorageKeyException("Sale with id '" + saleid + "' already exists! " +
+				"This is a bug; please file a report.");
+		}
+
+		m_sales.put(saleid, sale);
+	}
+	public void delete(GarageSale sale)
+		throws StorageNotFoundException
+	{
+		int saleid = sale.id();
+
+		if (!m_sales.containsKey(saleid))
+			throw new StorageNotFoundException("sales", saleid);
+
+		m_sales.remove(saleid);
+	}
+	public boolean existsSale(int saleid) {
+		return m_sales.containsKey(saleid);
+	}
+	public Collection<GarageSale> listGarageSales()
+		throws StorageEmptyException
+	{
+		return m_sales.values();
+	}
+	public GarageSale findGarageSale(int saleid)
+		throws StorageNotFoundException
+	{
+		if (!m_sales.containsKey(saleid))
+			throw new StorageNotFoundException("sales", saleid);
+		return m_sales.get(saleid);
+	}
+
+	public GarageSaleRank getRating(User user, GarageSale sale)
+	{
+		LinkedList<GarageSaleRank> ratings = m_ratingsByUser.get(user);
+		Iterator<GarageSaleRank> iter = ratings.iterator();
+
+		GarageSaleRank rank = null;
+		while (iter.hasNext()) {
+			GarageSaleRank currentRank = iter.next();
+			// If it equals the sale we're looking for, return it and quit loop
+			if (currentRank.garageSale().equals(sale)) {
+				rank = currentRank;
+				break;
+			}
+		}
+
+		// If the rating wasn't found, create one and save it
+		if (rank == null) {
+			rank = new GarageSaleRank(sale, user);
+			m_ratings.add(rank);
+			m_ratingsByUser.get(user).add(rank);
+			m_ratingsBySale.get(sale).add(rank);
+		}
+
+		return rank;
+	}
+	public float getAverageRating(GarageSale sale)
+	{
+		LinkedList<GarageSaleRank> ratings = m_ratingsBySale.get(sale);
+		int sum = 0;
+
+		Iterator<GarageSaleRank> iter = ratings.iterator();
+		while (iter.hasNext()) {
+			sum += iter.next().rank();
+		}
+
+		// Average them and return the result
+		return ((float) sum / ratings.size());
 	}
 }

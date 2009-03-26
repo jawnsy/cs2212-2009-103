@@ -27,7 +27,7 @@ public class User
 
 	// these are all package variables so that they can be modified by Storage classes
 	String m_userid, m_firstName, m_lastName, m_password, m_phone;
-	transient GarageGeoPos m_home;
+	transient GeoPosition m_home;
 	transient Zoom m_zoom;
 
 	/**
@@ -78,7 +78,7 @@ public class User
 		if (name.length() > NAMELEN)
 			throw new UserException("The specified name is too long");
 
-		m_lastName = name;
+		m_firstName = name;
 	}
 
 	/**
@@ -223,9 +223,9 @@ public class User
 	 * 
 	 * @return home GeoPosition object associated with this User
 	 */
-	public GarageGeoPos home() {
+	public GeoPosition home() {
 		if (m_home == null)
-			m_home = new GarageGeoPos();
+			m_home = new GeoPosition();
 		return m_home;
 	}
 

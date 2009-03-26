@@ -7,8 +7,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
 
-import ca.uwo.garage.storage.Storage;
-
 public class Cache<T>
 	implements Serializable
 {

@@ -1,12 +1,12 @@
 package ca.uwo.garage.storage;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -162,7 +162,7 @@ public class GarageSaleLoader
 					{
 						currentSale.location(latitude, longitude);
 					}
-					catch (GarageGeoPosException e)
+					catch (GeoPositionException e)
 					{
 						throw new IOException("Format error at line " + currentLineNum + 
 						": The longitude and latitude values are invalid");
@@ -391,7 +391,7 @@ public class GarageSaleLoader
 					}
 					
 					// Enter the date for this garage sale
-					Date date = new Date(year, month, day);
+					Date date = (new GregorianCalendar(year, month, day)).getTime();
 					currentSale.datetime(date);
 				}
 				else

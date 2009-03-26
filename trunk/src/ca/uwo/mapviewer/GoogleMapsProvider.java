@@ -1,4 +1,4 @@
-package ca.uwo.garage.storage;
+package ca.uwo.mapviewer;
 
 import org.jdesktop.swingx.mapviewer.TileFactoryInfo; 
 import ca.uwo.garage.*;
