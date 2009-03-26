@@ -16,13 +16,16 @@ public class OpenTileFactory
 	    	MAX_ZOOM_LEVEL,
 	    	TOP_ZOOM_LEVEL,
 	    	TILE_SIZE, // Tile size in pixels
-	    	true, // Zero tile abcissa left
-	    	true, // Zero tile ordinate top
+
+	    	// OSM's tile server has (0,0) as top-left corner
+	    	true, // Zero tile is leftmost (abscissa)
+	    	true, // Zero tile is topmost
 	    	TILE_SERVER, // Server base URL
 	    	"x", "y", // X and Y position
 	    	"z" // Zoom level
 	    );
 	}
+
     public String getTileUrl(int x, int y, int zoom) {
     	String temp;
         zoom = TOP_ZOOM_LEVEL-zoom;
