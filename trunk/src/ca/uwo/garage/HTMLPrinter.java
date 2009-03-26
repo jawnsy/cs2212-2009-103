@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ca.uwo.garage.storage;
+package ca.uwo.garage;
 
 import java.util.Collection;
 import java.util.Set;
@@ -22,8 +22,8 @@ import javax.imageio.ImageIO;
 
 import org.jdesktop.swingx.JXMapKit;
 
-import ca.uwo.garage.Printer;
-import ca.uwo.garage.PrinterException;
+import ca.uwo.garage.storage.Category;
+import ca.uwo.garage.storage.GarageSale;
 
 
 
