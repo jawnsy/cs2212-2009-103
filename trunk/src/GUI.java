@@ -21,7 +21,7 @@ import org.jdesktop.swingx.mapviewer.WaypointPainter;
 import ca.uwo.garage.HTMLPrinter;
 import ca.uwo.garage.storage.GarageGeoPos;
 import ca.uwo.garage.storage.GeoPositionException;
-import ca.uwo.mapviewer.GoogleMapsProvider;
+import ca.uwo.garage.mapviewer.GoogleMapsProvider;
 
 public class GUI implements ActionListener
 {

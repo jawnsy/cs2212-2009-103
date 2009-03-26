@@ -10,13 +10,29 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+/**
+ * The GarageSaleLoader class is used for bulk loading into UWOGarage 
+ * by reading a text file, and making new GarageSale objects that fit
+ * the input from the file.
+ * 
+ * @author Jason
+ * @version $Revision$
+ */
+
 public class GarageSaleLoader
 {
 	private String m_filename;
 	private Storage m_storage;
 	private Collection<GarageSale> m_sales;
 	private FileReader m_handle;
-
+	
+	/**
+	 * Constructor for the class only taking in a filename
+	 * creates a new GarageSaleLoader
+	 * by the parameters
+	 * @param filename The filename of the file we're reading in
+	 * @throws IOException if the filename is invalid
+	 */
 	public GarageSaleLoader(String filename)
 	throws IOException
 	{
@@ -24,6 +40,15 @@ public class GarageSaleLoader
 		m_handle = new FileReader(filename);
 		m_sales = new LinkedList<GarageSale>();
 	}
+	/**
+	/**
+	 * Constructor for the class only taking in a filename
+	 * creates a new GarageSaleLoader
+	 * by the parameters
+	 * @param filename The filename of the file we're reading in
+	 * @param storage The storage object we are using
+	 * @throws IOException if the filename is invalid
+	 */
 	public GarageSaleLoader(String filename, Storage storage)
 	throws IOException
 	{
@@ -33,20 +58,47 @@ public class GarageSaleLoader
 		m_sales = new LinkedList<GarageSale>();
 	}
 
+	/**
+	 * Mutator method for m_storage
+	 * sets or changes which storage object we're using
+	 * by the parameters
+	 * @param storage The storage object we're using
+	 */
 	public void storage(Storage storage) 
 	{
 		m_storage = storage;
 	}
+	
+	/**
+	 * Accessor method for m_storage
+	 * returns the m_storage object
+	 * @return storage The storage object we're using
+	 */
 	public Storage storage()
 	{
 		return m_storage;
 	}
 
+	/**
+	 * Accessor method for m_filename
+	 * Returns the m_filename object
+	 * @return m_filename The filename that we're importing from
+	 */
 	public String filename() 
 	{
 		return m_filename;
 	}
 
+	/**
+	 * Private method
+	 * This method is what does the actual importing
+	 * It parses the text file, and gets the information needed for each GarageSale object
+	 * 
+	 * As it finishes getting the information for each individual GarageSale object it creates one
+	 * and stores it in the storage object
+	 * 
+	 * This method follows the requirements set out by the 
+	 */
 	private void load() throws IOException, NullPointerException
 	{
 		BufferedReader reader = new BufferedReader(m_handle);
@@ -496,14 +548,21 @@ public class GarageSaleLoader
 		Iterator<GarageSale> iter = m_sales.iterator();
 		while (iter.hasNext()) 
 		{
-			//m_storage.store(iter.next());
+			try 
+			{
+				m_storage.store(iter.next());
+			} 
+			catch (StorageFullException e) 
+			{	
+				System.err.println;			
+			} 
+			catch (StorageKeyException e) 
+			{	
+				System.err.println;
+			}
 		}
 	}
-	public void export(OutputStream writer)
-	throws IOException
-	{
-
-	}
+	
 	public Collection<GarageSale> listGarageSales()
 	{
 		return m_sales;

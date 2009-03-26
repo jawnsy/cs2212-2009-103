@@ -35,8 +35,8 @@ public class GeoPosition
 	 * Constructor for objects of class GeoPosition
 	 * creates a new GeoPosition with the coordinates specified
 	 * by the parameters
-	 * @param m_latitude Latitude value of coordinate
-	 * @param m_longitude Longitude value of coordinate
+	 * @param latitude Latitude value of coordinate
+	 * @param longitude Longitude value of coordinate
 	 */
 	public GeoPosition(double latitude, double longitude)
 		throws GeoPositionException
