@@ -2,6 +2,7 @@
  * program would want to catch
  * @author CS2212 Group 103
  * @extends GarageException
+ * @version $Revision$
  */
 
 package ca.uwo.garage;
