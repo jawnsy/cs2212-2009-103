@@ -83,5 +83,8 @@ public interface Storage
 		throws StorageFullException, StorageKeyException;
 	public abstract void delete(GarageSale sale)
 		throws StorageNotFoundException;
-	public abstract boolean existsSale(int saleid);	
+	public abstract boolean existsSale(int saleid);
+
+	public abstract float getAverageRating(GarageSale sale);
+	public abstract GarageSaleRank getRating(User user, GarageSale sale);
 }

@@ -21,7 +21,7 @@ public class GarageSale
 {
 	private static final long serialVersionUID = 1L;
 
-	private GarageGeoPos m_location; // The coordinate of our GarageSale
+	private GeoPosition m_location; // The coordinate of our GarageSale
 	private String m_address, m_municipality, m_province; // Geocode type stuff
 	private Date m_datetime; // date and time of the Garage Sale
 	private Set<Category> m_categories; // this GarageSale's categories
@@ -53,6 +53,7 @@ public class GarageSale
 	public GarageSale() {
 		m_categories = new HashSet<Category>();
 		m_note = "";
+		m_id = -1;
 	}
 
 	/**
@@ -61,7 +62,7 @@ public class GarageSale
 	 * @param waypoint A GeoPosition containing the coordinates of the garage sale.
 	 * @return A new GarageSale object
 	 */
-	public GarageSale(GarageGeoPos waypoint)
+	public GarageSale(GeoPosition waypoint)
 	{
 		this();
 		m_location = waypoint;
@@ -77,9 +78,9 @@ public class GarageSale
 	 * @throws A GeoPositionException if the GeoPosition is invalid
 	 */
 	public GarageSale(double latitude, double longitude)
-		throws GarageGeoPosException
+		throws GeoPositionException
 	{
-		this(new GarageGeoPos(latitude, longitude));
+		this(new GeoPosition(latitude, longitude));
 	}
 
 	/**
@@ -87,7 +88,7 @@ public class GarageSale
 	 * 
 	 * @param position A GeoPosition specifying where this GarageSale is located
 	 */
-	public void location(GarageGeoPos position)
+	public void location(GeoPosition position)
 	{
 		m_location = position;
 	}
@@ -101,15 +102,15 @@ public class GarageSale
 	 * @throws A GeoPositionException if the coordinates are invalid
 	 */
 	public void location(double latitude, double longitude)
-		throws GarageGeoPosException
+		throws GeoPositionException
 	{
-		m_location = new GarageGeoPos(latitude, longitude);
+		m_location = new GeoPosition(latitude, longitude);
 	}
 
 	/**
 	 * @return The position of the GarageSale (the Waypoint)
 	 */
-	public GarageGeoPos location()
+	public GeoPosition location()
 	{
 		return m_location;
 	}
@@ -267,6 +268,17 @@ public class GarageSale
 			m_note = "";
 		else
 			m_note = note;
+	}
+
+	/**
+	 * This method simply returns the current identification code, which may be
+	 * "-1", a sentinel value, in case the identification code has not yet been
+	 * set (that is, the GarageSale has not been saved using Storage)
+	 * 
+	 * @return the current identification code
+	 */
+	public int id() {
+		return m_id;
 	}
 
 	/**

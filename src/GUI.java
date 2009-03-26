@@ -18,10 +18,10 @@ import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
 import org.jdesktop.swingx.mapviewer.Waypoint;
 import org.jdesktop.swingx.mapviewer.WaypointPainter;
 
+import ca.uwo.garage.HTMLPrinter;
 import ca.uwo.garage.storage.GarageGeoPos;
-import ca.uwo.garage.storage.GarageGeoPosException;
-import ca.uwo.garage.storage.GoogleMapsProvider;
-import ca.uwo.garage.storage.HTMLPrinter;
+import ca.uwo.garage.storage.GeoPositionException;
+import ca.uwo.mapviewer.GoogleMapsProvider;
 
 public class GUI implements ActionListener
 {
@@ -878,7 +878,7 @@ public class GUI implements ActionListener
 	{
 		private JButton view, categories;
 		
-		public BuyerWindow() throws GarageGeoPosException
+		public BuyerWindow() throws GeoPositionException
 		{		
 			this.addWindowListener(new WindowAdapter() 
 			{
@@ -1156,7 +1156,7 @@ public class GUI implements ActionListener
 	
 
 	
-	public static void main(String[] args) throws GarageGeoPosException
+	public static void main(String[] args) throws GeoPositionException
 	{
 		
 		GUI controller = new GUI();

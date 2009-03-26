@@ -4,7 +4,6 @@
 package ca.uwo.garage;
 
 import java.util.Collection;
-import java.util.Set;
 import java.awt.Desktop;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
