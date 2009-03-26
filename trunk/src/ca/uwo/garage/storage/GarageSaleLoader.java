@@ -98,8 +98,10 @@ public class GarageSaleLoader
 	 * and stores it in the storage object
 	 * 
 	 * This method follows the requirements set out by the 
+	 * 
+	 * @throws IOException in the event that the formatting is off an IOException is thrown
 	 */
-	private void load() throws IOException, NullPointerException
+	private void load() throws IOException
 	{
 		BufferedReader reader = new BufferedReader(m_handle);
 		String currentLine = null;
@@ -563,6 +565,11 @@ public class GarageSaleLoader
 		}
 	}
 	
+	/**
+	 * Accessor method for m_sales
+	 * Returns the m_sales object
+	 * @return m_sales The collection of garage sales we're adding
+	 */
 	public Collection<GarageSale> listGarageSales()
 	{
 		return m_sales;
