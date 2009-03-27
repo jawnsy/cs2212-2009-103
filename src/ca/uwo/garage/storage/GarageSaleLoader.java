@@ -179,20 +179,33 @@ public class GarageSaleLoader
 
 					currentLine = currentLine.substring(spaceIndex + 1);
 					decimalIndex = currentLine.indexOf('.');
-
+					
 					// Check to see if the longitude has a decimal point
 					if (decimalIndex < 0)
 					{
 						throw new IOException("Format error at line " + currentLineNum);
 					}
 
-					// Test to see if the longitude has 1,2 or 3 digits preceding the decimal place
-					if (decimalIndex < 1 || decimalIndex > 3)
+					// If the longitude is negative
+					if (currentLine.indexOf('-') == 0)
 					{
-						throw new IOException("Format error at line " + currentLineNum + ": The longitutde and " +
-						"latitude values must have 1,2 or 3 digits prior to the decimal point.");
+						// Test to see if the longitude has 1,2 or 3 digits preceding the decimal place
+						if (decimalIndex < 2 || decimalIndex > 4)
+						{
+							throw new IOException("Format error at line " + currentLineNum + ": The longitutde and " +
+							"latitude values must have 1,2 or 3 digits prior to the decimal point.");
+						}
 					}
-
+					// If the longitude isn't negative
+					else
+					{
+						// Test to see if the longitude has 1,2 or 3 digits preceding the decimal place
+						if (decimalIndex < 1 || decimalIndex > 3)
+						{
+							throw new IOException("Format error at line " + currentLineNum + ": The longitutde and " +
+							"latitude values must have 1,2 or 3 digits prior to the decimal point.");
+						}
+					}
 					// Test to see if the longitude has 3,4,5 or 6 digits after the decimal place
 					if (currentLine.substring(decimalIndex).length() < 4 || currentLine.substring(decimalIndex).length() > 7)
 					{
@@ -525,7 +538,6 @@ public class GarageSaleLoader
 				}
 			
 				this.m_sales.add(currentSale);
-				
 				// Read the "area: " line for the next garage sale or exit the loop if the 
 				// end of the bulk file has been reached
 				currentLine = reader.readLine();
@@ -545,6 +557,11 @@ public class GarageSaleLoader
 	}
 	
 	
+	/**
+	 * Saves the list of garage sales created by the load
+	 * function to the storage
+	 * @throws IOException
+	 */
 	public void save() throws IOException
 	{
 		Iterator<GarageSale> iter = m_sales.iterator();
