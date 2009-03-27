@@ -565,19 +565,16 @@ public class GarageSaleLoader
 	public void save() throws IOException
 	{
 		Iterator<GarageSale> iter = m_sales.iterator();
-		while (iter.hasNext()) 
-		{
-			try 
-			{
+
+		while (iter.hasNext()) {
+			try {
 				m_storage.store(iter.next());
-			} 
-			catch (StorageFullException e) 
-			{	
-				System.err.println;			
-			} 
-			catch (StorageKeyException e) 
-			{	
-				System.err.println;
+			} catch (StorageFullException e) {
+				System.err.println("Error inserting Garage Sale: " + e.getMessage());
+				e.printStackTrace();
+			} catch (StorageKeyException e) {
+				System.err.println("Key error inserting Garage Sale. This shouldn't happen!");
+				e.printStackTrace();
 			}
 		}
 	}

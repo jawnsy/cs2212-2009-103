@@ -13,7 +13,7 @@ import ca.uwo.garage.GarageException;
  *
  * @author Jonathan Yu
  * @extends GarageException
- * @version $Revision: 17 $
+ * @version $Revision$
  */
 public class GarageSaleException
 	extends GarageException
