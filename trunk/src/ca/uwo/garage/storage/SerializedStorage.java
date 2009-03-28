@@ -31,6 +31,7 @@ public class SerializedStorage
 	private transient TreeMap<String, User> m_user;
 	private transient TreeMap<Integer, Category> m_category;
 	private transient TreeMap<Integer, GarageSale> m_sales;
+	private transient TreeMap<User, Double> m_specificUserRating;
 	private transient LinkedList<GarageSaleRank> m_ratings;
 	private transient TreeMap<User, LinkedList<GarageSaleRank>> m_ratingsByUser;
 	private transient TreeMap<GarageSale, LinkedList<GarageSaleRank>> m_ratingsBySale;
@@ -44,10 +45,66 @@ public class SerializedStorage
 		m_user = new TreeMap<String, User>();
 		m_category = new TreeMap<Integer, Category>();
 		m_sales = new TreeMap<Integer, GarageSale>();
+		m_specificUserRating = new TreeMap<User, Double>();
 
 		m_ratings = new LinkedList<GarageSaleRank>();
 		m_ratingsByUser = new TreeMap<User, LinkedList<GarageSaleRank>>();
 		m_ratingsBySale = new TreeMap<GarageSale, LinkedList<GarageSaleRank>>();
+	}
+	
+	/**
+	 *  This function computes all of the users rankings and stores it 
+	 *  in the m_specificUserRating object
+	 *  @param User: The user that you're adding or changing the rank of
+	 */
+	public void computeAllUserRatings()
+	{
+		Iterator<User> tempIterator = m_user.values().iterator();
+		User tempUser;
+		
+		while (tempIterator.hasNext())
+		{
+			tempUser = tempIterator.next();
+			
+			computeUserRating(tempUser);
+		}
+		
+	}
+	/**
+	 * This function calculates the rating of a specific user
+	 * @param user The user you want to calculate the rank for
+	 */
+	
+	
+	public void computeUserRating(User user)
+	{
+		Iterator<GarageSaleRank> tempIterator = m_ratings.iterator();
+		GarageSaleRank tempGarageSaleRank;
+		int rank = 0;
+		int counter = 0;
+		
+		while (tempIterator.hasNext() == true)
+		{
+			tempGarageSaleRank = tempIterator.next();
+			
+			if (tempGarageSaleRank.garageSale().owner() == user)
+			{
+				rank = rank + tempGarageSaleRank.rank();
+				counter ++;
+			}
+		}
+		
+		m_specificUserRating.put(user, (double)rank/counter);
+	}
+	
+	/**
+	 * This function returns the rank of the requested user
+	 * @param user
+	 * @return the rank of the user entered
+	 */
+	public double getRank(User user)
+	{
+		return m_specificUserRating.get(user);
 	}
 
 	/**
