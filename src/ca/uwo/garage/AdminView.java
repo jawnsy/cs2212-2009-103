@@ -19,6 +19,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import ca.uwo.garage.storage.Category;
 import ca.uwo.garage.storage.User;
 
 @SuppressWarnings("serial")
@@ -26,6 +27,7 @@ public class AdminView
 	extends View
 {
 	private UserPanel m_users;
+	private CategoryPanel m_categories;
 	public AdminView(Controller control) {
 		super(control);
 		setTitle("Admin View");
@@ -35,7 +37,9 @@ public class AdminView
         JTabbedPane tabbedPane = new JTabbedPane();
         m_users = new UserPanel();
         tabbedPane.addTab("Users", m_users);
-        tabbedPane.addTab("Categories", new JLabel("test"));
+
+        m_categories = new CategoryPanel();
+        tabbedPane.addTab("Categories", m_categories);
 
         //Add the tabbed pane to this panel.
         container.add(tabbedPane);
@@ -57,11 +61,54 @@ public class AdminView
 			listModel.addElement(iter.next().id());
 		}
 		m_users.list.setModel(listModel);
+
+		// If the list model isn't empty, select the first user
+		if (!listModel.isEmpty())
+			m_users.list.setSelectedIndex(0);
+	}
+	public void setCategoryList(Collection<Category> categories)
+	{
+		Iterator<Category> iter = categories.iterator();
+
+		/* the JList needs an array of objects, so we've got to create a new collection
+		 * of Strings (category names) and then copy that to an array
+		 */
+		DefaultListModel listModel = new DefaultListModel();
+		while (iter.hasNext())
+		{
+			listModel.addElement(iter.next().name());
+		}
+		m_categories.list.setModel(listModel);
+
+		// If the list model isn't empty, select the first category
+		if (!listModel.isEmpty())
+			m_categories.list.setSelectedIndex(0);
 	}
 
-	public void addDeleteUserAction(ActionListener ev)
+	public void addAddCategoryAction(ActionListener ev)
+	{
+		m_categories.add.addActionListener(ev);
+	}
+	public void addDeleteCategoryAction(ActionListener ev)
+	{
+		m_categories.delete.addActionListener(ev);
+	}
+	public void addUpdateCategoryAction(ActionListener ev)
+	{
+		m_categories.modify.addActionListener(ev);
+	}
+	public String getSelectedCategory()
+	{
+		return (String)m_categories.list.getSelectedValue();
+	}
+
+	public void addAddUserAction(ActionListener ev)
 	{
 		m_users.add.addActionListener(ev);
+	}
+	public void addDeleteUserAction(ActionListener ev)
+	{
+		m_users.delete.addActionListener(ev);
 	}
 	public void addUpdateUserAction(ActionListener ev)
 	{
@@ -91,6 +138,32 @@ public class AdminView
 	{
 		// If getText is empty, then the password wasn't changed
 		return !m_users.password.getText().isEmpty();
+	}
+
+	private class CategoryPanel
+		extends JPanel
+	{
+		JList list;
+		JButton add, modify, delete;
+		public CategoryPanel()
+		{
+			setLayout(new BorderLayout());
+			list = new JList();
+			add(list, BorderLayout.CENTER);
+
+			// Bottom toolbox
+			JPanel tools = new JPanel(new GridLayout(1,3));
+			add = new JButton("Add");
+			tools.add(add);
+
+			modify = new JButton("Modify");
+			tools.add(modify);
+	
+			delete = new JButton("Delete");
+			tools.add(delete);
+
+			add(tools, BorderLayout.SOUTH);
+		}
 	}
 
 	private class UserPanel
@@ -162,9 +235,13 @@ public class AdminView
 		{
 			public void valueChanged(ListSelectionEvent ev) {
 				AdminController control = (AdminController)m_control;
+				if (list.isSelectionEmpty())
+					return;
+
 				User user = control.getUser((String)list.getSelectedValue());
 				userid.setText(user.id());
 				userid.setEnabled(false);
+				password.setText(null); // clear the password box
 
 				firstName.setText(user.first_name());
 				lastName.setText(user.last_name());

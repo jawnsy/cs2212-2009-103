@@ -379,6 +379,20 @@ public class SerializedStorage
 		m_user.remove(userid);
 	}
 
+	public int getCategoryIdByName(String name)
+	{
+		Iterator<Category> iter = m_category.values().iterator();
+		while (iter.hasNext())
+		{
+			Category current = iter.next();
+			if (current.name().equals(name))
+			{
+				return current.id();
+			}
+		}
+		return -1;
+	}
+
 	/**
 	 * Finds a given Category by its integer id and returns it.
 	 * 
@@ -477,6 +491,29 @@ public class SerializedStorage
 		return m_sales.get(saleid);
 	}
 
+	public void delete(GarageSaleRank gsr)
+	{
+		m_ratings.remove(gsr);
+	}
+	public void deleteRatings(User user)
+	{
+		Iterator<GarageSaleRank> iter = m_ratingsByUser.get(user).iterator();
+		while (iter.hasNext())
+		{
+			delete(iter.next());
+		}
+		m_ratingsByUser.remove(user);
+	}
+	public void deleteRatings(GarageSale sale)
+	{
+		Iterator<GarageSaleRank> iter = m_ratingsBySale.get(sale).iterator();
+		while (iter.hasNext())
+		{
+			delete(iter.next());
+		}
+		m_ratingsBySale.remove(sale);
+	}
+	
 	public GarageSaleRank getRating(User user, GarageSale sale)
 	{
 		LinkedList<GarageSaleRank> ratings = m_ratingsByUser.get(user);

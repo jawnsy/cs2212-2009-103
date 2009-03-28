@@ -7,8 +7,12 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JOptionPane;
 
+import ca.uwo.garage.storage.Category;
+import ca.uwo.garage.storage.CategoryException;
 import ca.uwo.garage.storage.Storage;
 import ca.uwo.garage.storage.StorageEmptyException;
+import ca.uwo.garage.storage.StorageFullException;
+import ca.uwo.garage.storage.StorageKeyException;
 import ca.uwo.garage.storage.StorageNotFoundException;
 import ca.uwo.garage.storage.User;
 import ca.uwo.garage.storage.UserException;
@@ -36,8 +40,8 @@ public class AdminController
 
 		try {
 			m_view.setUserList(m_storage.listUsers());
+			m_view.setCategoryList(m_storage.listCategories());
 		} catch (StorageEmptyException e) {
-			System.err.println("No users");
 		}
 	}
 	public void view(View view)
@@ -48,14 +52,21 @@ public class AdminController
 
 		m_view = (AdminView) view;
 		m_view.addWindowListener(new CloseTrigger());
+
 		m_view.addUpdateUserAction(new UserUpdateTrigger());
+		m_view.addDeleteUserAction(new UserDeleteTrigger());
+		m_view.addAddUserAction(new UserAddTrigger());
+
+		m_view.addAddCategoryAction(new CategoryAddTrigger());
+		m_view.addUpdateCategoryAction(new CategoryUpdateTrigger());
+		m_view.addDeleteCategoryAction(new CategoryDeleteTrigger());
 	}
 	public void storage(Storage storage)
 	{
 		m_storage = storage;
 	}
 	public boolean isReady() {
-		return false;
+		return m_ready;
 	}
 	public User getUser(String userid)
 	{
@@ -66,34 +77,242 @@ public class AdminController
 		}
 		return user;
 	}
-	public void deleteUser(String userid)
+
+	private class CategoryAddTrigger
+		implements ActionListener
 	{
-		try {
-			User user = m_storage.findUser(userid);
-			m_storage.delete(user);
-			m_view.setUserList(m_storage.listUsers());
-		} catch (StorageNotFoundException e) {
-			JOptionPane.showMessageDialog(
+		public void actionPerformed(ActionEvent ev) {
+			String s = (String)JOptionPane.showInputDialog(
 					m_view,
-					"Could not find user: " + userid + "\n" +
-					"Please select a user to delete from the listbox.\n",
-					"User Deletion Problem",
-					JOptionPane.ERROR_MESSAGE
+					"Please choose a category name:",
+					"Adding New Category",
+					JOptionPane.PLAIN_MESSAGE
 				);
-		} catch (StorageEmptyException e) {
+
+			// The user hit cancel
+			if (s == null || s.isEmpty())
+				return;
+
+			int categoryid = m_storage.getCategoryIdByName(s);
+			// categoryid == -1 means we couldn't find it
+			if (categoryid == -1)
+			{
+				try {
+					m_storage.store(new Category(s));
+
+					// Update the category list display
+					m_view.setCategoryList(m_storage.listCategories());
+				} catch (StorageFullException e) {
+				} catch (StorageKeyException e) {
+				} catch (CategoryException e) {
+					JOptionPane.showMessageDialog(
+							m_view,
+							"The specified category name is invalid: " +
+							e.getMessage(),
+							"Error Adding Category",
+							JOptionPane.ERROR_MESSAGE
+						);
+				} catch (StorageEmptyException e) {
+					// won't happen since we just added a category
+				}
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(
+						m_view,
+						"Sorry, that category name already exists",
+						"Error Adding Category",
+						JOptionPane.ERROR_MESSAGE
+					);
+			}
+		}
+	}
+	private class CategoryDeleteTrigger
+		implements ActionListener
+	{
+		public void actionPerformed(ActionEvent ev) {
+			String category = m_view.getSelectedCategory();
+			if (category == null || category.isEmpty()) {
+				JOptionPane.showMessageDialog(
+						m_view,
+						"Please select a category to delete first.",
+						"Error Deleting Category",
+						JOptionPane.ERROR_MESSAGE
+					);
+				return;
+			}
+	
+			int categoryid = m_storage.getCategoryIdByName(category);
+			if (categoryid == -1) {
+				JOptionPane.showMessageDialog(
+						m_view,
+						"Could not find category... This shouldn't happen. " +
+						"Please file a bug report!",
+						"Error Deleting Category",
+						JOptionPane.ERROR_MESSAGE
+					);
+				return;
+			}
+			
+			// Everything looks good, do the delete now
+			try {
+				Category cat = m_storage.findCategory(categoryid);
+				m_storage.delete(cat);
+	
+				// Update the category list display
+				m_view.setCategoryList(m_storage.listCategories());
+			} catch (StorageNotFoundException e) {
+				// shouldn't happen since we checked above
+			} catch (StorageEmptyException e) {
+				// ignore this
+			}
+		}
+	}
+	private class CategoryUpdateTrigger
+		implements ActionListener
+	{
+		public void actionPerformed(ActionEvent ev) {
+			String category = m_view.getSelectedCategory();
+			if (category == null || category.isEmpty()) {
+				JOptionPane.showMessageDialog(
+						m_view,
+						"Please select a category to modify first.",
+						"Error Modifying Category",
+						JOptionPane.ERROR_MESSAGE
+					);
+				return;
+			}
+
+			String s = (String)JOptionPane.showInputDialog(
+					m_view,
+					"Please enter a new category name:",
+					category
+				);
+
+			// The user hit cancel
+			if (s == null || s.isEmpty())
+				return;
+
+			int categoryid = m_storage.getCategoryIdByName(category);
+			if (categoryid == -1) {
+				JOptionPane.showMessageDialog(
+						m_view,
+						"Could not find category... This shouldn't happen. " +
+						"Please file a bug report!",
+						"Error Deleting Category",
+						JOptionPane.ERROR_MESSAGE
+					);
+				return;
+			}
+
+			// Everything looks good, do the update now
+			try {
+				Category cat = m_storage.findCategory(categoryid);
+				cat.name(s);
+	
+				// Update the category list display
+				m_view.setCategoryList(m_storage.listCategories());
+			} catch (StorageNotFoundException e) {
+				// shouldn't happen since we checked above
+			} catch (StorageEmptyException e) {
+				// ignore this
+			} catch (CategoryException e) {
+				JOptionPane.showMessageDialog(
+						m_view,
+						"Invalid category name: " + e.getMessage(),
+						"Error Updating Category",
+						JOptionPane.ERROR_MESSAGE
+					);
+				return;
+			}
+		}
+	}
+
+	private class UserAddTrigger
+		implements ActionListener
+	{
+		public void actionPerformed(ActionEvent ev) {
+			String s = (String)JOptionPane.showInputDialog(
+					m_view,
+					"Please choose a userid:",
+					"Adding New User",
+					JOptionPane.PLAIN_MESSAGE
+				);
+
+			// The user hit cancel
+			if (s == null || s.isEmpty())
+				return;
+
+			if (m_storage.existsUser(s))
+			{
+				JOptionPane.showMessageDialog(
+						m_view,
+						"Sorry, that userid already exists",
+						"Error Adding User",
+						JOptionPane.ERROR_MESSAGE
+					);
+			}
+			else {
+				try {
+					m_storage.store(new User(s));
+
+					// Update the user list display
+					m_view.setUserList(m_storage.listUsers());
+				} catch (StorageFullException e) {
+				} catch (StorageKeyException e) {
+				} catch (UserException e) {
+					JOptionPane.showMessageDialog(
+							m_view,
+							"The specified username is invalid: " +
+							e.getMessage(),
+							"Error Adding User",
+							JOptionPane.ERROR_MESSAGE
+						);
+				} catch (StorageEmptyException e) {
+					// not going to get here; we just added something!
+				}
+			}
+		}
+	}
+	private class UserDeleteTrigger
+		implements ActionListener
+	{
+		public void actionPerformed(ActionEvent ev)
+		{
+			try {
+				User user = m_storage.findUser(m_view.getUserId());
+				m_storage.delete(user);
+				m_view.setUserList(m_storage.listUsers());
+			} catch (StorageNotFoundException e) {
+				JOptionPane.showMessageDialog(
+						m_view,
+						"Could not find user: " + m_view.getUserId() + "\n" +
+						"Please select a user to delete from the listbox.\n",
+						"User Deletion Problem",
+						JOptionPane.ERROR_MESSAGE
+					);
+			} catch (StorageEmptyException e) {
+			}
 		}
 	}
 
 	private class UserUpdateTrigger
 		implements ActionListener
 	{
-		public void actionPerformed(ActionEvent arg0) {
+		public void actionPerformed(ActionEvent ev) {
 			User user = null;
 			try {
 				user = new User(m_view.getUserId());
-				user.first_name(m_view.getFirstName());
-				user.last_name(m_view.getLastName());
+
+				if (!m_view.getFirstName().isEmpty())
+					user.first_name(m_view.getFirstName());
+
+				if (!m_view.getLastName().isEmpty())
+					user.last_name(m_view.getLastName());
+
+				if (!m_view.getPhone().isEmpty())
 				user.phone(m_view.getPhone());
+
 				if (m_view.passwordChanged())
 					user.password(m_view.getPassword());
 			} catch (UserException e) {

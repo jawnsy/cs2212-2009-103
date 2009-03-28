@@ -85,6 +85,11 @@ public interface Storage
 		throws StorageNotFoundException;
 	public abstract boolean existsSale(int saleid);
 
+	public abstract int getCategoryIdByName(String name);
+	public abstract void deleteRatings(User user);
+	public abstract void delete(GarageSaleRank gsr);
+	public abstract void deleteRatings(GarageSale sale);
+
 	public abstract float getAverageRating(GarageSale sale);
 	public abstract GarageSaleRank getRating(User user, GarageSale sale);
 }
