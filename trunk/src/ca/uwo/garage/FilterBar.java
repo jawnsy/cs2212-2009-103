@@ -6,8 +6,12 @@ import java.awt.FlowLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Set;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -57,6 +61,10 @@ public class FilterBar
 		m_filter = new FilterPlaceholder(storage);
 		add(m_filter, BorderLayout.EAST);
 	}
+	public void reset()
+	{
+		m_selector.getModel().setSelectedItem(searchBy[0]);
+	}
 
 	public void itemStateChanged(ItemEvent evt)
 	{
@@ -65,6 +73,20 @@ public class FilterBar
 		cl.show(m_filter, (String) evt.getItem());
 	}
 
+	public String mode()
+	{
+		switch (m_selector.getSelectedIndex())
+		{
+			case 0: return "";
+			case 1: return "radius";
+			case 2: return "category";
+			case 3: return "date";
+			case 4: return "seller";
+			case 5: return "rank_sales";
+			case 6: return "rank_seller";
+		}
+		return "";
+	}
 	private class FilterPlaceholder
 		extends JPanel
 	{
@@ -88,9 +110,7 @@ public class FilterBar
 	private class RadiusFilter
 		extends JPanel
 	{
-		JTextField distance;
-		JTextField latitude;
-		JTextField longitude;
+		JTextField distance, latitude, longitude;
 
 		public RadiusFilter(Storage storage)
 		{
@@ -112,19 +132,37 @@ public class FilterBar
 		}
 	}
 
+	public Set<String> getSelectedCategories()
+	{
+		Set<String> set = new HashSet<String>();
+		Iterator<JCheckBox> iter = m_category.categories.iterator();
+
+		while (iter.hasNext())
+		{
+			JCheckBox box = iter.next();
+			if (box.isSelected())
+				set.add(box.getName());
+		}
+		return set;
+	}
 	private class CategoryFilter
 		extends JPanel
 	{
+		LinkedList<JCheckBox> categories;
 		public CategoryFilter(Storage storage)
 		{
 			setLayout(new FlowLayout());
+			categories = new LinkedList<JCheckBox>();
 
 			Iterator<Category> iter = null;
 			try {
 				iter = storage.listCategories().iterator();
 				while (iter.hasNext())
 				{
-					add(new JCheckBox(iter.next().name()));
+					JCheckBox box = new JCheckBox(iter.next().name());
+					box.setSelected(true);
+					categories.add(box);
+					add(box);
 				}
 			} catch (StorageEmptyException e) {
 			}
@@ -141,8 +179,7 @@ public class FilterBar
 			String[] range = {
 					"exactly",
 					"before",
-					"after",
-					"between" 
+					"after"
 				};
 			add(new JComboBox(range));
 

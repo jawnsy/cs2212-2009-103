@@ -1,12 +1,16 @@
 package ca.uwo.garage;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.FlowLayout;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import ca.uwo.garage.mapviewer.MapPanel;
 import ca.uwo.garage.storage.Storage;
+import ca.uwo.garage.storage.StorageEmptyException;
 
 @SuppressWarnings("serial")
 public class BuyerView
@@ -15,6 +19,7 @@ public class BuyerView
 	SearchBar m_search;
 	MapPanel m_map;
 	StatusBar m_status;
+	GarageSalePanel m_sales;
 
 	public BuyerView(Controller control) {
 		super(control);
@@ -29,9 +34,18 @@ public class BuyerView
 		m_map = new MapPanel();
 		add(m_map, BorderLayout.CENTER);
 
-		JPanel optionpane = new JPanel();
-		optionpane.setPreferredSize(new Dimension(200, 100));
-		add(optionpane, BorderLayout.EAST);
+		m_sales = new GarageSalePanel();
+		m_sales.addGarageSaleTrigger(new SaleSelectedTrigger());
+
+		JPanel tools = new JPanel(new FlowLayout());
+		tools.add(new JButton("Test"));
+		tools.add(new JButton("Test"));
+		tools.add(new JButton("Test"));
+
+		JPanel right = new JPanel(new BorderLayout());
+		right.add(m_sales, BorderLayout.CENTER);
+		right.add(tools, BorderLayout.SOUTH);		
+		add(right, BorderLayout.EAST);
 
 		m_status = new StatusBar();
 		add(m_status, BorderLayout.SOUTH);
@@ -47,6 +61,24 @@ public class BuyerView
 	public void update(Storage storage)
 	{
 		m_search.update(storage);
+		try {
+			m_sales.update(storage.listGarageSales());
+		} catch (StorageEmptyException e) {
+			// don't do anything if it's empty
+		}
+
 		pack();
+	}
+
+	private class SaleSelectedTrigger
+		implements ListSelectionListener
+	{
+		public void valueChanged(ListSelectionEvent e)
+		{
+			// If they're not adjusting, then this is a no-op
+			if (!e.getValueIsAdjusting())
+				return;
+			System.out.println("Current address: " + m_sales.getSelected().address());
+		}
 	}
 }

@@ -1,8 +1,12 @@
 package ca.uwo.garage;
 
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -16,6 +20,7 @@ public class SearchBar
 {
 	private LinkedList<FilterBar> m_filters;
 	private static final int FILTERS = 3;
+	private JButton m_start;
 	
 	public SearchBar()
 	{
@@ -23,20 +28,49 @@ public class SearchBar
 
 		m_filters = new LinkedList<FilterBar>();
 
-		add(new JLabel("To search, enter one or more search conditions below..."));
+		add(new JLabel("To filter the results shown in the Quick Access panel, enter search conditions below..."));
 		for (int i = 0; i < FILTERS; i++)
+		{
 			addFilterRow();
+		}
 
 		JPanel bottom = new JPanel(new GridLayout(1, 2));
-		bottom.add(new JButton("Begin Search"));
-		bottom.add(new JButton("Clear Query"));
+		m_start = new JButton("Begin Search");
+		bottom.add(m_start);
+
+		JButton reset = new JButton("Clear Query");
+		reset.addActionListener(new ClearTrigger());
+		bottom.add(reset);
+
 		add(bottom);
+	}
+	public void addSearchTrigger(ActionListener ev)
+	{
+		m_start.addActionListener(ev);
+	}
+	public Set<String> getSelectedCategories()
+	{
+		HashSet<String> selected = new HashSet<String>();
+		Iterator<FilterBar> iter = m_filters.iterator();
+		while (iter.hasNext())
+		{
+			// take the intersection of all categories
+			selected.retainAll(iter.next().getSelectedCategories());
+		}
+		return selected;
 	}
 
 	public void addFilterRow() {
 		FilterBar filter = new FilterBar();
 		m_filters.add(filter);
 		add(filter);
+	}
+	public void reset() {
+		Iterator<FilterBar> iter = m_filters.iterator();
+		while (iter.hasNext())
+		{
+			iter.next().reset();
+		}
 	}
 
 	public void update(Storage storage) {
@@ -47,6 +81,13 @@ public class SearchBar
 		}
 	}
 
+	private class ClearTrigger
+		implements ActionListener
+	{
+		public void actionPerformed(ActionEvent ev) {
+			reset();
+		}
+	}
 	/*
 	   1. Within a given radius, in kilometers, of a given longitude and latitude
 	   2. By userid. The buyer must be able to see all the garage sales that, for example, user abc1 has posted

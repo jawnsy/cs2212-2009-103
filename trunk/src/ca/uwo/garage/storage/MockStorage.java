@@ -65,10 +65,18 @@ public class MockStorage
 			store(new Category("Antiques and Collectibles"));
 
 			GarageSale defSale = new GarageSale(defOwner);
+			defSale.address("100 Nowhere St");
+			defSale.location(new GeoPosition());
 			defSale.addCategory(catElec);
 			store(defSale);
 			defSale.addCategory(catGift);
 			defSale.addCategory(catCndy);
+
+			GarageSale other = new GarageSale(defOwner);
+			other.address("127 Fake St");
+			defSale.location(new GeoPosition());
+			defSale.addCategory(catElec);
+			store(other);
 		} catch (Exception e) {
 			System.err.println("Exception thrown: " + e.getMessage());
 			e.printStackTrace();

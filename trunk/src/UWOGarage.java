@@ -33,6 +33,8 @@ public class UWOGarage {
 				}
 			}
 
+			runBuyer();
+			/*
 			if (admin)
 				runAdmin();
 			else {
@@ -41,6 +43,7 @@ public class UWOGarage {
 				else
 					runSeller();
 			}
+			*/
 		}
 		catch (Exception e) {
 			reportError(e);

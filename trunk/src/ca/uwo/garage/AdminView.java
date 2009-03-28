@@ -149,6 +149,8 @@ public class AdminView
 		{
 			setLayout(new BorderLayout());
 			list = new JList();
+			list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+			list.setLayoutOrientation(JList.VERTICAL);
 			add(list, BorderLayout.CENTER);
 
 			// Bottom toolbox
