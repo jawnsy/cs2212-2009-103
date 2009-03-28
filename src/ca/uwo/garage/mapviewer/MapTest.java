@@ -4,15 +4,23 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 
+import ca.uwo.garage.mapviewer.MapPanel;
+import ca.uwo.garage.storage.GeoPosition;
+
 public class MapTest
    {
      public static void main(String args[])
        throws Exception
        {
     	 JFrame frame = new JFrame("Open Street Maps Test");
-    	 frame.getContentPane().add(new MapPanel());
+    	 MapPanel mapPanel=new MapPanel();
+    	 mapPanel.addWayPoint(new GeoPosition());
+    	 frame.getContentPane().add(mapPanel);
          frame.setSize(800, 600);
          frame.setVisible(true);
+         mapPanel.addWayPoint(new GeoPosition(43.011583,-81.258586));
+     //    mapPanel.repaint();
+         //mapPanel.getJXMapKit().getMainMap().repaint();
          
          // Add listener to kill the things if the window dies.
          
