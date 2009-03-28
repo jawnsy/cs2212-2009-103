@@ -20,10 +20,10 @@ public class User
 	private static final long serialVersionUID = 1L;
 
 	// These come from the CS2212 project specifications
-	private static final int USERIDLEN   = 4;
-	private static final int NAMELEN     = 20;
-	private static final int PASSWORDLEN = 3;
-	private static final int PHONENUMLEN = 10;
+	public static final int USERIDLEN   = 4;
+	public static final int NAMELEN     = 20;
+	public static final int PASSWORDLEN = 3;
+	public static final int PHONENUMLEN = 10;
 
 	// these are all package variables so that they can be modified by Storage classes
 	String m_userid, m_firstName, m_lastName, m_password, m_phone;
@@ -167,8 +167,9 @@ public class User
 	 * @return true if the Password is correct; or false otherwise
 	 */
 	public boolean validPassword(String passphrase) {
-		if (m_password == passphrase)
+		if (m_password.equals(passphrase))
 			return true;
+		System.out.println("Passwords don't match");
 		return false;
 	}
 

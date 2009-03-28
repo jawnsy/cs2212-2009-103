@@ -45,11 +45,10 @@ public class MockStorage
 
 		// Insert some test data
 		try {
-			store(new User("aaa"));
-			store(new User("abc"));
-			store(new User("def"));
-			store(new User("user"));
+			store(new User("abcd"));
 			store(new User("test"));
+			store(new User("blah"));
+			store(new User("user"));
 
 			Category catElec = new Category("Electronics");
 			Category catGift = new Category("Gifts");
