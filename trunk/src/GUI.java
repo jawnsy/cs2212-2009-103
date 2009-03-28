@@ -829,7 +829,7 @@ public class GUI implements ActionListener
 			mapPanel.setBorder(BorderFactory.createMatteBorder(1,0,0,0,Color.black));
 			this.getContentPane().add(mapPanel);
 			
-	        jxMapKit.setCenterPosition(new GarageGeoPos(43.005, -81.275));
+	        jxMapKit.setCenterPosition(new GeoPos(43.005, -81.275));
 	        
 	        
 	        
