@@ -27,10 +27,6 @@ public class OpenTileFactory
 	}
 
     public String getTileUrl(int x, int y, int zoom) {
-    	String temp;
-        zoom = TOP_ZOOM_LEVEL-zoom;
-        temp = this.baseURL +"/"+zoom+"/"+x+"/"+y+".png";
-        System.out.println(temp);
-        return temp;
+    	return (this.baseURL + "/" + (TOP_ZOOM_LEVEL - zoom) + "/" + x + "/" + y + ".png");
     }
 }
