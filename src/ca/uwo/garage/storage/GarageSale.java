@@ -146,6 +146,9 @@ public class GarageSale
 	public String address() {
 		return m_address;
 	}
+	public String toString() {
+		return m_address;
+	}
 
 	/**
 	 * This method sets the municipality to the given name.
