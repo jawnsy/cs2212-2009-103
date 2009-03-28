@@ -18,12 +18,14 @@ public class AuthorizationController
 	private boolean m_ready, m_authorized;
 	private Storage m_storage;
 	private User m_user;
+	private int m_counter;
 
 	public AuthorizationController()
 	{
 		m_view = null;
 		m_ready = false;
 		m_storage = null;
+		m_counter = 0;
 	}
 	public void start()
 		throws ControllerNotReadyException
@@ -76,6 +78,7 @@ public class AuthorizationController
 	{
 		public void actionPerformed(ActionEvent ev)
 		{
+
 			try {
 				m_user = m_storage.findUser(m_view.getUserId());
 			} catch (StorageNotFoundException e) {
@@ -93,6 +96,11 @@ public class AuthorizationController
 				error();
 		}
 		public void error() {
+			if (m_counter == 3)
+			{
+				System.exit(0);
+			}
+			
 			JOptionPane.showMessageDialog(
 					null,
 					"Could not authenticate your login credentials.\n" +
@@ -100,6 +108,7 @@ public class AuthorizationController
 					"Authentication Error",
 					JOptionPane.ERROR_MESSAGE
 				);
+			m_counter ++;
 			m_view.reset();
 		}
 	}
