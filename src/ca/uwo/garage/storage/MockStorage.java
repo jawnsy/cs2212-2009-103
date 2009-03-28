@@ -46,6 +46,9 @@ public class MockStorage
 		// Insert some test data
 		try {
 			User defOwner = new User("ownr");
+			defOwner.first_name("System");
+			defOwner.last_name("Owner");
+			store(defOwner);
 			store(new User("abcd"));
 			store(new User("test"));
 			store(new User("blah"));

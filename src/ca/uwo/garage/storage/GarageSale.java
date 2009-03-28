@@ -197,7 +197,7 @@ public class GarageSale
 
 		// Check if the given province is in our list
 		for (int i = 0; i < PROVINCES.length; i++) {
-			if (province == PROVINCES[i])
+			if (province.equals(PROVINCES[i]))
 				return true;
 		}
 		return false;

@@ -1,6 +1,9 @@
 package ca.uwo.garage;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+
+import javax.swing.JPanel;
 
 import ca.uwo.garage.mapviewer.MapPanel;
 import ca.uwo.garage.storage.Storage;
@@ -25,6 +28,10 @@ public class BuyerView
 
 		m_map = new MapPanel();
 		add(m_map, BorderLayout.CENTER);
+
+		JPanel optionpane = new JPanel();
+		optionpane.setPreferredSize(new Dimension(200, 100));
+		add(optionpane, BorderLayout.EAST);
 
 		m_status = new StatusBar();
 		add(m_status, BorderLayout.SOUTH);
