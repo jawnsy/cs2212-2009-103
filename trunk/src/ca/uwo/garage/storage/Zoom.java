@@ -1,5 +1,7 @@
 package ca.uwo.garage.storage;
 
+import ca.uwo.garage.mapviewer.OpenMapProvider;
+
 /**
  * This class is used to zoom the map to different levels. 
  * 
@@ -17,7 +19,11 @@ public class Zoom {
 	* initialize zoom level to minimum
 	*/
 	public Zoom() {
-		m_level = Z_MIN;
+		m_level = OpenMapProvider.ZOOM_DEFAULT;
+	}
+
+	public int level() {
+		return m_level;
 	}
 // ACCESSOR METHODS ***********************************
 	/**
@@ -49,6 +55,7 @@ public class Zoom {
 	{
 		if (zoom < Z_MIN || zoom > Z_MAX)
 			throw new ZoomInvalidException("Zoom level must be between " + Z_MIN + " and " + Z_MAX + " inclusive");
+		m_level = zoom;
 	}
 	
 	/**

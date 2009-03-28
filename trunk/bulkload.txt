@@ -1,0 +1,18 @@
+area: 44.123 -81.012
+stre: 65 Compton Cres
+city: London
+prov: ON
+date: 27/9/2008
+time: 23:30
+area: 44.123 -83.012
+stre: 30 Briscoe
+city: London
+prov: ON
+date: 27/9/2008
+time: 12:30
+area: 42.123 -79.000
+stre: 45 Walmer Street
+city: Toronto
+prov: ON
+date: 7/7/2008
+time: 8:30

@@ -126,19 +126,21 @@ public class GarageSaleLoader
 
 		State state = State.AREA; // Begin expecting an area
 		String date = null;
-		while ((line = reader.readLine()) != null)
+
+		while (reader.ready())
 		{
+			line = reader.readLine();
+			if (line == null || line.isEmpty())
+				parseError(lineNum, "Blank line detected. Please remove it and try again");
+
 			if (state == State.AREA)
 			{
 				if (line.startsWith("area: "))
 				{
-					if (currentSale != null)
-						m_sales.add(currentSale);
-
 					currentSale = new GarageSale(m_owner);
 
 					try {
-						String parts[] = line.split(" ");
+						String parts[] = line.substring(6).split(" ");
 						double latitude = Double.parseDouble(parts[0]);
 						double longitude = Double.parseDouble(parts[1]);
 
@@ -189,11 +191,12 @@ public class GarageSaleLoader
 			{
 				if (line.startsWith("prov: "))
 				{
+					String province = line.substring(6);
 					try {
-						currentSale.province(line.substring(6));
+						currentSale.province(province);
 						state = State.DATE;
 					} catch (GarageSaleException e) {
-						parseError(lineNum, "Invalid province name: " + line);
+						parseError(lineNum, "Invalid province name: " + province);
 					}
 				}
 				else {
@@ -231,6 +234,7 @@ public class GarageSaleLoader
 					state = State.AREA;
 				}
 			}
+			lineNum++;
 		}
 	}
 	
@@ -240,7 +244,7 @@ public class GarageSaleLoader
 		JOptionPane.showMessageDialog(
 				null,
 				"Error parsing input, line " + line + ":\n" +
-				description +
+				description + "\n" +
 				"Please correct file errors and try again.",
 				"File Parsing Error!",
 				JOptionPane.ERROR_MESSAGE

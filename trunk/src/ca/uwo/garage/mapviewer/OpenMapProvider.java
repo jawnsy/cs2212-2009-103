@@ -10,6 +10,7 @@ public class OpenMapProvider
 	public static final int ZOOM_REGION 	= 10;
 	public static final int ZOOM_COUNTRY 	= 12;
 	public static final int ZOOM_CONTINENT 	= 14;
+	public static final int ZOOM_DEFAULT    = ZOOM_STREET;
 
 	private TileFactoryInfo tileFactory = new OpenTileFactory();
 
@@ -20,7 +21,7 @@ public class OpenMapProvider
         return "Open Street Maps"; 
     }
     public int getInitialZoomLevel() { 
-        return ZOOM_STREET;
+        return ZOOM_DEFAULT;
     }
     public boolean isSatelliteImageryAvailable() {
         return false;

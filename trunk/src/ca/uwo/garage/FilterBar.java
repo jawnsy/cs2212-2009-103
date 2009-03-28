@@ -5,8 +5,8 @@ import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Iterator;
 
 import javax.swing.JCheckBox;
@@ -146,12 +146,34 @@ public class FilterBar
 				};
 			add(new JComboBox(range));
 
-			Date now = GregorianCalendar.getInstance().getTime();
+			/*
+			 * Apparently, even though the Java documentation says that the start date only
+			 * needs to be equal to or less than the default date set, this is not true.
+			 * The model will ONLY work if the Default Date is some time in advance of
+			 * the start date. It doesn't throw any errors and the bug is really hard
+			 * to catch. Java is stupid.
+			 * 
+			 * As a result, we have to set the default date to one or more days in advance
+			 * of the current date. Since we *have* to have earliest < start (they cannot
+			 * even be equal, as the documentation says. the spinner just refuses to work
+			 * if they are equal.) So we set the earliest date to yesterday, which is
+			 * apparently shown in the spinner as *today*'s date. this is confusing, and
+			 * Java is stupid.
+			 */
+			// Current date
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.DAY_OF_YEAR, -1);
+			Date earliestDate = cal.getTime();
+
+			// Default date
+			cal.add(Calendar.DAY_OF_YEAR, 1);
+			Date defaultDate = cal.getTime();
+
 			SpinnerDateModel model = new SpinnerDateModel(
-					now, // initial date
-					now, // earliest date to allow
-					null, // latest date (null = no limit)
-					0 // ignored for SpinnerDateModel
+					defaultDate, // initial date
+					earliestDate, // earliest date to allow
+					null, // latest date (null means no limit)
+					Calendar.YEAR // ignored for SpinnerDateModel
 				);
 
 			JSpinner spinner = new JSpinner(model);
