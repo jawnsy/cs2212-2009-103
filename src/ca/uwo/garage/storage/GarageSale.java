@@ -27,6 +27,7 @@ public class GarageSale
 	private Set<Category> m_categories; // this GarageSale's categories
 	private String m_note; // a note for the GarageSale
 	private int m_id; // a unique id
+	private User m_owner; // the owner of this garage sale
 
 	private static final int MAXADDRESSLEN = 50;
 	private static final int MAXCITYLEN    = 20;
@@ -50,10 +51,11 @@ public class GarageSale
 	 * 
 	 * @return A new GarageSale object
 	 */
-	public GarageSale() {
+	public GarageSale(User owner) {
 		m_categories = new HashSet<Category>();
 		m_note = "";
 		m_id = -1;
+		m_owner = owner;
 	}
 
 	/**
@@ -62,9 +64,9 @@ public class GarageSale
 	 * @param waypoint A GeoPosition containing the coordinates of the garage sale.
 	 * @return A new GarageSale object
 	 */
-	public GarageSale(GeoPosition waypoint)
+	public GarageSale(User owner, GeoPosition waypoint)
 	{
-		this();
+		this(owner);
 		m_location = waypoint;
 	}
 
@@ -77,10 +79,10 @@ public class GarageSale
 	 * @return A new GarageSale object
 	 * @throws A GeoPositionException if the GeoPosition is invalid
 	 */
-	public GarageSale(double latitude, double longitude)
+	public GarageSale(User owner, double latitude, double longitude)
 		throws GeoPositionException
 	{
-		this(new GeoPosition(latitude, longitude));
+		this(owner, new GeoPosition(latitude, longitude));
 	}
 
 	/**
@@ -188,7 +190,7 @@ public class GarageSale
 	}
 
 	// check if the province appears valid
-	private boolean provinceok(String province) {
+	public static boolean provinceok(String province) {
 		// If the province is longer than 2, then it's invalid
 		if (province.length() > MAXPROVLEN)
 			return false;
@@ -255,6 +257,15 @@ public class GarageSale
 	 */
 	public Set<Category> listCategories() {
 		return m_categories;
+	}
+
+	public User owner()
+	{
+		return m_owner;
+	}
+	public void owner(User owner)
+	{
+		m_owner = owner;
 	}
 
 	/**
