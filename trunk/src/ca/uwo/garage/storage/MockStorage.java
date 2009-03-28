@@ -45,6 +45,7 @@ public class MockStorage
 
 		// Insert some test data
 		try {
+			User defOwner = new User("ownr");
 			store(new User("abcd"));
 			store(new User("test"));
 			store(new User("blah"));
@@ -60,7 +61,7 @@ public class MockStorage
 			store(new Category("Toys"));
 			store(new Category("Antiques and Collectibles"));
 
-			GarageSale defSale = new GarageSale();
+			GarageSale defSale = new GarageSale(defOwner);
 			defSale.addCategory(catElec);
 			store(defSale);
 			defSale.addCategory(catGift);
