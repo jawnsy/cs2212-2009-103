@@ -44,6 +44,7 @@ public class GeoPosition
 		super(latitude,longitude);
 		latlong(latitude, longitude);
 	}
+	
 
 	// ACCESSOR METHODS ***********************************
 	/**

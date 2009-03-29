@@ -56,6 +56,10 @@ public class GarageSale
 		m_note = "";
 		m_id = -1;
 		m_owner = owner;
+		m_address="";
+		m_municipality="";
+		m_province="ON";
+		m_datetime= new Date();
 	}
 
 	/**
@@ -68,6 +72,7 @@ public class GarageSale
 	{
 		this(owner);
 		m_location = waypoint;
+		
 	}
 
 	/**
@@ -317,6 +322,26 @@ public class GarageSale
 	 */
 	void id(int id) {
 		m_id = id;
+	}
+	
+	public String getinfo(){
+		StringBuffer strbuf=new StringBuffer();
+		strbuf.append("<HTML><BODY>");
+		strbuf.append(this.owner().getinfo());
+		strbuf.append("Location: ");
+		strbuf.append(this.address()+", "+this.municipality()+", "+this.province()+" <br/>");
+		strbuf.append("Date: ");
+		strbuf.append(this.datetime().toString()+" <br/>");
+		strbuf.append("Categories: ");
+		for(Category c:this.listCategories()){
+			strbuf.append("/"+c.name()+"/ ");
+		}
+		strbuf.append("<br/>");
+		strbuf.append("Note: ");
+		strbuf.append(this.note()+" <br/>");
+		strbuf.append("</BODY></HTML>");
+		return strbuf.toString();
+		
 	}
 	
 }

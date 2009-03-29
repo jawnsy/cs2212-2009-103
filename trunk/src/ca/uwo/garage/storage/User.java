@@ -52,6 +52,8 @@ public class User
 
 		m_userid = userid.toLowerCase();
 		m_password = "aaa";
+		m_firstName="";
+		m_lastName="";
 	}
 
 	/**
@@ -240,5 +242,16 @@ public class User
 	 */
 	public String toString() {
 		return m_userid;
+	}
+	
+	public String getinfo(){
+		StringBuffer strbuf=new StringBuffer();
+		
+		strbuf.append("Owner: ");
+		strbuf.append(this.m_firstName+" "+this.m_lastName+" <br/>");
+		strbuf.append("Phone: ");
+		strbuf.append(this.m_phone+" <br/>");
+		
+		return strbuf.toString();
 	}
 }
