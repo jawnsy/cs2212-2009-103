@@ -5,7 +5,6 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -21,7 +20,6 @@ import ca.uwo.garage.storage.Category;
 import ca.uwo.garage.storage.GarageSale;
 import ca.uwo.garage.storage.Storage;
 import ca.uwo.garage.storage.StorageEmptyException;
-import ca.uwo.garage.storage.User;
 
 @SuppressWarnings("serial")
 public class BuyerView
@@ -32,7 +30,7 @@ public class BuyerView
 	private StatusBar m_status;
 	private GarageSalePanel m_sales;
 	private JButton m_viewInfo;
-
+	
 	public BuyerView(Controller control) {
 		super(control);
 
@@ -123,14 +121,18 @@ public class BuyerView
 				JLabel[] labels = new JLabel[8];
 				labels[0] = new JLabel("Seller: " + sale.owner());
 				labels[1] = new JLabel("Garage Sale Rank: ");
-				labels[2] =  new JLabel("Seller Rank: ");
-				labels[3] = new JLabel("Latitude: " + sale.location().latitude() + " Longitude: " + sale.location().longitude());
-				labels[4] = new JLabel("Address: " + sale.address());
-				labels[5] = new JLabel("Date: " + sale.datetime().toString());
+				labels[2] = new JLabel("Seller Rank: ");
+				labels[3] = new JLabel("Coordinates: " + sale.location().toString());
+
+				if (sale.datetime() != null)
+					labels[4] = new JLabel("Address: " + sale.address());
+
+				if (sale.datetime() != null)
+					labels[5] = new JLabel("Date: " + sale.datetime().toString());
 				
 				String categoryString = "";
-				Set categories = sale.listCategories();
-				Iterator iter = categories.iterator();
+				Set<Category> categories = sale.listCategories();
+				Iterator<Category> iter = categories.iterator();
 				if (iter.hasNext())
 				{
 					categoryString.concat(iter.next().toString());
@@ -196,12 +198,6 @@ public class BuyerView
 			// If they're not adjusting, then this is a no-op
 			if (!e.getValueIsAdjusting())
 				return;
-			System.out.println("Current address: " + m_sales.getSelected().address());
 		}
-	}
-	public static void main (String[] args)
-	{
-		AdminController control = new AdminController();
-		BuyerView view = new BuyerView(control);
 	}
 }

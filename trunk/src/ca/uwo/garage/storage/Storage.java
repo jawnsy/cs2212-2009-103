@@ -96,4 +96,6 @@ public interface Storage
 	public void computeUserRating(User user);
 	public void computeAllUserRatings();
 	public double getRank(User user);
+
+	public void clear();
 }

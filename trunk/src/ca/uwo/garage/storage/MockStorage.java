@@ -316,4 +316,21 @@ public class MockStorage
 		// Average them and return the result
 		return ((float) sum / ratings.size());
 	}
+	public void clear() {
+		m_user.clear();
+		m_category.clear();
+		m_sales.clear();
+		if (m_sales.isEmpty())
+			System.err.println("OK");
+		m_ratings.clear();
+		m_ratingsByUser.clear();
+		m_ratingsBySale.clear();
+
+		// reset the sequences
+		m_sequence = null;
+		m_sequence = new SequenceSet();
+		// Register the sequences we'll use later, to ensure it doesn't conflict with anything else
+		m_sequence.register("category_id");
+		m_sequence.register("sale_id");
+	}
 }

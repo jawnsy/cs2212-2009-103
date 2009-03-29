@@ -3,13 +3,11 @@ package ca.uwo.garage.storage;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.text.ParseException;
 import javax.swing.JOptionPane;
 
 /**
@@ -525,6 +523,14 @@ public class GarageSaleLoader
 		}
 	}
 
+	public void owner(User owner)
+	{
+		m_owner = owner;
+	}
+	public User owner()
+	{
+		return m_owner;
+	}
 
 	/**
 	 * Saves the list of garage sales created by the load
