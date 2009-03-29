@@ -4,23 +4,30 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.List;
 import java.awt.TextField;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Collection;
+import java.util.Iterator;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import ca.uwo.garage.storage.GarageSale;
 
 public class SellerView extends View
 {
 	private JButton delete, modify, addNew, bulkLoad, browse;
+	private JList garageList;
 
 	public SellerView(Controller control)
 	{	
@@ -80,18 +87,8 @@ public class SellerView extends View
 		buttonPanel.add(Box.createRigidArea(new Dimension(0,15)));
 		buttonPanel.add(addNew);
 
-		List garageList = new List(8,false);
+		garageList = new JList();
 		innerPanel.add(garageList);
-		/*garageList.addItem("Garage Sale 1");
-		garageList.addItem("Garage Sale 2");
-		garageList.addItem("Garage Sale 3");
-		garageList.addItem("Garage Sale 4");
-		garageList.addItem("Garage Sale 5");
-		garageList.addItem("Garage Sale 6");
-		garageList.addItem("Garage Sale 7");
-		garageList.addItem("Garage Sale 8");
-		garageList.addItem("Garage Sale 9");
-		garageList.addItem("Garage Sale 10");*/
 
 		innerPanel.add(Box.createRigidArea(new Dimension(50,0)));
 
@@ -125,6 +122,25 @@ public class SellerView extends View
 
 		this.setLocationRelativeTo(null);
 		this.setLocation(this.getLocationOnScreen().x, this.getLocationOnScreen().y - this.getHeight()/2);
+	}
+	
+	public void updateList(Collection<GarageSale> sales)
+	{
+		DefaultListModel listModel = new DefaultListModel();
+		Iterator<GarageSale> iter = sales.iterator();
+		while (iter.hasNext())
+		{
+			listModel.addElement(iter.next());
+		}
+		garageList.setModel(listModel);
+	}
+	public void addDeleteAction(ActionListener ev)
+	{
+		delete.addActionListener(ev);
+	}
+	public String getListSelect()
+	{
+		return garageList.getSelectedItem();
 	}
 	public static void main(String[] args)
 	{
