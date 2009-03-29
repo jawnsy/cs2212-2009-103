@@ -104,8 +104,8 @@ public class BuyerView
 	{
 		public void actionPerformed(ActionEvent ev)
 		{
-			//GarageSale sale = m_sales.getSelected();
-			GarageSale sale = null;
+			GarageSale sale = m_sales.getSelected();
+			/*GarageSale sale = null;
 			try
 			{
 				sale = new GarageSale(new User("per4"));
@@ -117,7 +117,7 @@ public class BuyerView
 			catch (Exception e)
 			{
 				
-			}
+			}*/
 			if (sale != null)
 			{
 				JLabel[] labels = new JLabel[8];
