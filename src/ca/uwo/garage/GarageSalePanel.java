@@ -1,7 +1,6 @@
 package ca.uwo.garage;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;

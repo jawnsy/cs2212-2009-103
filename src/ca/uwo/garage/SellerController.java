@@ -4,31 +4,31 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 
 import javax.swing.JOptionPane;
-import ca.uwo.garage.storage.Category;
-import ca.uwo.garage.storage.CategoryException;
 import ca.uwo.garage.storage.GarageSale;
+import ca.uwo.garage.storage.GarageSaleLoader;
+import ca.uwo.garage.storage.GarageSaleLoaderException;
 import ca.uwo.garage.storage.Storage;
 import ca.uwo.garage.storage.StorageEmptyException;
-import ca.uwo.garage.storage.StorageFullException;
-import ca.uwo.garage.storage.StorageKeyException;
 import ca.uwo.garage.storage.StorageNotFoundException;
 import ca.uwo.garage.storage.User;
-import ca.uwo.garage.storage.UserException;
 
 public class SellerController
-implements Controller
+	implements Controller
 {
 	private SellerView m_view;
 	private Storage m_storage;
 	private boolean m_ready;
+	private User m_user;
 
 	public SellerController()
 	{
 		m_view = null;
 		m_ready = false;
 		m_storage = null;
+		m_user = null;
 	}
 
 	public void start()
@@ -38,6 +38,13 @@ implements Controller
 			throw new ControllerNotReadyException("a SellerView");
 		if (m_storage == null)
 			throw new ControllerNotReadyException("a Storage backend");
+		if (m_user == null)
+			throw new ControllerNotReadyException("a seller-mode User object");
+
+		try {
+			m_view.update(m_storage.listGarageSales(), m_user);
+		} catch (StorageEmptyException e) {
+		}
 	}
 
 	public void view(View view) throws ViewTypeException
@@ -48,11 +55,43 @@ implements Controller
 		m_view = (SellerView) view;
 		m_view.addWindowListener(new CloseTrigger());
 		m_view.addDeleteAction(new DeleteTrigger());
+		m_view.addAddAction(new AddTrigger());
+		m_view.addBulkLoadAction(new BulkLoadTrigger());
 	}
 
 	public boolean isReady() 
 	{
 		return m_ready;
+	}
+	private class BulkLoadTrigger
+		implements ActionListener
+	{
+		public void actionPerformed(ActionEvent ev) 
+		{
+			try {
+				GarageSaleLoader loader = new GarageSaleLoader(m_view.getPath());
+				m_storage.clear();
+				loader.storage(m_storage);
+				loader.owner(m_user);
+				loader.save();
+			} catch (GarageSaleLoaderException e) {
+				JOptionPane.showMessageDialog(
+						m_view,
+						"Error during bulk load: " +
+						e.getMessage(), // Text
+						"Garage Sale Bulk Loading Error",
+						JOptionPane.ERROR_MESSAGE
+					);
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(
+						m_view,
+						"I/O error during bulk load: " +
+						e.getMessage(), // Text
+						"Garage Sale Input Error",
+						JOptionPane.ERROR_MESSAGE
+					);
+			}
+		}		
 	}
 	private class DeleteTrigger
 		implements ActionListener
@@ -75,14 +114,19 @@ implements Controller
 			try {
 				m_storage.delete(sale);
 				//m_view.updateList()
+
+				m_view.update(m_storage.listGarageSales(), m_user);
 			} catch (StorageNotFoundException e) {
 				// should not happen
+			} catch (StorageEmptyException e) {
+				// just ignore this
 			}
 		}
 		
 	}
+
 	private class CloseTrigger
-	extends WindowAdapter
+		extends WindowAdapter
 	{
 		public void windowClosing(WindowEvent ev) 
 		{
@@ -90,8 +134,19 @@ implements Controller
 			m_view.dispose();
 		}
 	}
+	private class AddTrigger
+		implements ActionListener
+	{
+		public void actionPerformed(ActionEvent ev) {
+		}
+	}
+
 	public void storage(Storage storage)
 	{
 		m_storage = storage;
+	}
+
+	public void user(User user) {
+		m_user = user;
 	}
 }

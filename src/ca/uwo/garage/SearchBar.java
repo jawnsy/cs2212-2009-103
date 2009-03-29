@@ -1,7 +1,6 @@
 package ca.uwo.garage;
 
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.HashSet;
@@ -13,7 +12,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import ca.uwo.garage.storage.GeoPosition;
 import ca.uwo.garage.storage.Storage;
 
 @SuppressWarnings("serial")

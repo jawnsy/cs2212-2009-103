@@ -10,14 +10,20 @@ import ca.uwo.garage.AuthorizationView;
 import ca.uwo.garage.BuyerController;
 import ca.uwo.garage.BuyerView;
 import ca.uwo.garage.ControllerNotReadyException;
+import ca.uwo.garage.SellerController;
+import ca.uwo.garage.SellerView;
 import ca.uwo.garage.View;
 import ca.uwo.garage.ViewTypeException;
 import ca.uwo.garage.storage.MockStorage;
+import ca.uwo.garage.storage.SerializedStorage;
 import ca.uwo.garage.storage.Storage;
 import ca.uwo.garage.storage.StorageException;
+import ca.uwo.garage.storage.User;
+import ca.uwo.garage.storage.UserException;
 
 public class UWOGarage {
-	public static Storage m_storage;
+	private static Storage m_storage;
+	private static User m_user;
 
 	public static void main(String[] args)
 	{
@@ -33,8 +39,6 @@ public class UWOGarage {
 				}
 			}
 
-			runBuyer();
-			/*
 			if (admin)
 				runAdmin();
 			else {
@@ -43,7 +47,6 @@ public class UWOGarage {
 				else
 					runSeller();
 			}
-			*/
 		}
 		catch (Exception e) {
 			reportError(e);
@@ -78,7 +81,7 @@ public class UWOGarage {
 		BuyerView view = new BuyerView(control);
 
 		// usually done by isBuyerMode
-		m_storage = new MockStorage();
+		m_storage = new SerializedStorage();
 		m_storage.connect();
 
 		control.view(view);
@@ -87,8 +90,19 @@ public class UWOGarage {
 	}
 
 	public static void runSeller()
+		throws ViewTypeException, ControllerNotReadyException, StorageException, UserException
 	{
-		
+		SellerController control = new SellerController();
+		SellerView view = new SellerView(control);
+
+		// usually done by isBuyerMode
+		m_storage = new SerializedStorage();
+		m_storage.connect();
+
+		control.view(view);
+		control.user(m_user);
+		control.storage(m_storage);
+		control.start();
 	}
 
 	// Determine whether we're a Buyer Mode
@@ -113,10 +127,43 @@ public class UWOGarage {
 				// ignore this error
 			}
 		}
+		
+		m_user = control.getUser();
 
 		// When the Controller is ready, it will either be authorized or the user cancelled
 		if (!control.isAuthorized()) {
 			System.exit(1);
+		}
+		
+		// If we've got the default password, the user needs to change it
+		if (m_user.validPassword("aaa"))
+		{
+			String s = null;
+			boolean again = true;
+			while (again || (s == null || s.isEmpty()))
+			{
+				s = (String)JOptionPane.showInputDialog(
+						null,
+						"Welcome to the UWO Garage Sale System!\n" +
+						"For security reasons, please choose a new password now.",
+						"Set New Password",
+						JOptionPane.PLAIN_MESSAGE
+					);
+
+				try {
+					m_user.password(s);
+					again = false;
+				} catch (UserException e) {
+					JOptionPane.showMessageDialog(
+							null,
+							"Invalid password: " + e.getMessage() +
+							"Please try again.",
+							"Password Invalid",
+							JOptionPane.ERROR_MESSAGE
+						);
+					again = true;
+				}
+			}
 		}
 
 		return control.isBuyerMode();

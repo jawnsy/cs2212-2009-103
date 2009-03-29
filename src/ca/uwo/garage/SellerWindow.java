@@ -18,7 +18,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
-public class SellerWindow extends JFrame
+@SuppressWarnings("serial")
+public class SellerWindow
+	extends JFrame
 {
 	private JButton delete, modify, addNew, bulkLoad, browse;
 
