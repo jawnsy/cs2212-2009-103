@@ -198,6 +198,10 @@ public class BuyerView
 			// If they're not adjusting, then this is a no-op
 			if (!e.getValueIsAdjusting())
 				return;
+			//add waypoint to the map
+			m_map.removeWayPoint(m_map.getWayPoint());
+			m_map.addWayPoint(m_sales.getSelected());
+			m_map.repaint();
 		}
 	}
 }

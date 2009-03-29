@@ -5,6 +5,7 @@ import ca.uwo.garage.storage.GeoPositionException;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -71,6 +72,7 @@ public class MapPanel
         hoverLabel.setOpaque(false);
       
         m_mapKit.getMainMap().add(hoverLabel);
+     
         
         m_mapKit.getMainMap().addMouseListener(new MouseListener(){
             @Override
@@ -82,8 +84,8 @@ public class MapPanel
 			@Override
 			public void mouseReleased(MouseEvent e) {
 	               JXMapViewer map = m_mapKit.getMainMap();
-	                hoverLabel.setVisible(false);
-	                
+	               hoverLabel.setVisible(false);
+
 	                for(GarageWaypoint wp: waypoints){
 	                	org.jdesktop.swingx.mapviewer.GeoPosition gp=wp.getPosition();
 				
@@ -91,20 +93,24 @@ public class MapPanel
 	                	Point2D gp_pt = map.getTileFactory().geoToPixel(gp, map.getZoom());
 	                	//convert to screen
 	                	Rectangle rect = map.getViewportBounds();
+	                	//Point cvted_gp_pt = new Point((int)gp_pt.getX(),(int)gp_pt.getY());
 	                	Point cvted_gp_pt = new Point((int)gp_pt.getX()-rect.x,
 	                                                  (int)gp_pt.getY()-rect.y);
 	                	//check if near the mouse
 	                	if(cvted_gp_pt.distance(e.getPoint()) < 10) {
-	                		hoverLabel.setLocation(cvted_gp_pt);
+	                		hoverLabel.setLocation(e.getPoint());
 	                		//change hoverLabel info.
 	                		StringBuffer gs_info =new StringBuffer();
 	                		gs_info.append(wp.getGarageSale().getinfo());
 	                		
 	                		hoverLabel.setText(gs_info.toString());
 	                		hoverLabel.setVisible(true);
+	                		
 	                		return;
 	                	}
 	                }
+	                
+	                return;
 				}
 			@Override
 			public void mouseClicked(MouseEvent e) {}
@@ -117,12 +123,20 @@ public class MapPanel
         waypoints.add(wayPoint);
 	}
 	
-	public void removeWayPoint(GarageSale gs){
+	public void removeWayPoint(GarageWaypoint gwp){
 		for (GarageWaypoint wp:waypoints){
-			if((wp.getPosition().getLatitude()==gs.location().getLatitude())&&(wp.getPosition().getLongitude()==gs.location().getLongitude())){
+			if((wp.getPosition().getLatitude()==gwp.getPosition().getLatitude())&&(wp.getPosition().getLongitude()==gwp.getPosition().getLongitude())){
 				waypoints.remove(wp);
 			}
 		}
+	}
+	
+	public GarageWaypoint getWayPoint(){
+		GarageWaypoint gwp=null;
+			for(GarageWaypoint gw: waypoints){
+				gwp=gw;
+			}
+			return gwp;
 	}
 	public JXMapKit getJXMapKit(){
 		return m_mapKit;
