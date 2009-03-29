@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.TreeMap;
+import ca.uwo.garage.storage.GeoPosition;
 
 /* The Mock storage class is a mock-up of a Storage implementation, useful for
  * testing. It will pretend to insert properly, but doesn't do anything. It's
@@ -74,7 +75,7 @@ public class MockStorage
 
 			GarageSale other = new GarageSale(defOwner);
 			other.address("127 Fake St");
-			defSale.location(new GeoPosition());
+			other.location(new GeoPosition());
 			defSale.addCategory(catElec);
 			store(other);
 		} catch (Exception e) {

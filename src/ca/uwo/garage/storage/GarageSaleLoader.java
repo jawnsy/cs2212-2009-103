@@ -519,17 +519,9 @@ public class GarageSaleLoader
 				currentLineNum++;
 			}
 		}
-		catch (IOException e)
-		{
-			throw e;
-		}
 		catch (NullPointerException e)
 		{
 			throw new NullPointerException("The bulk load file does not contain all the required information");
-		}
-		catch (GarageSaleLoaderException e)
-		{
-			throw e;
 		}
 	}
 
