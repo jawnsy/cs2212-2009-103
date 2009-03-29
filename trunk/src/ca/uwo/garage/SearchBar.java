@@ -3,6 +3,7 @@ package ca.uwo.garage;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -12,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import ca.uwo.garage.storage.GeoPosition;
 import ca.uwo.garage.storage.Storage;
 
 @SuppressWarnings("serial")
@@ -20,7 +22,7 @@ public class SearchBar
 {
 	private LinkedList<FilterBar> m_filters;
 	private static final int FILTERS = 3;
-	private JButton m_start;
+	private JButton m_start, m_reset;
 	
 	public SearchBar()
 	{
@@ -38,15 +40,36 @@ public class SearchBar
 		m_start = new JButton("Begin Search");
 		bottom.add(m_start);
 
-		JButton reset = new JButton("Clear Query");
-		reset.addActionListener(new ClearTrigger());
-		bottom.add(reset);
+		m_reset = new JButton("Clear Query");
+		bottom.add(m_reset);
 
 		add(bottom);
 	}
 	public void addSearchTrigger(ActionListener ev)
 	{
 		m_start.addActionListener(ev);
+	}
+	public void addResetTrigger(ActionListener ev)
+	{
+		m_reset.addActionListener(ev);
+	}
+
+	public Collection<GeoConstraint> getGeoConstraints()
+	{
+		Iterator<FilterBar> iter = m_filters.iterator();
+		Collection<GeoConstraint> m_constraints = new LinkedList<GeoConstraint>();
+		while (iter.hasNext())
+		{
+			FilterBar bar = iter.next();
+			if (bar.mode().equals("radius"))
+			{
+				if (bar.getGeoDistance() > 0 && bar.getGeoPosition() != null)
+				{
+					m_constraints.add(new GeoConstraint(bar.getGeoPosition(), bar.getGeoDistance()));
+				}
+			}
+		}
+		return m_constraints;
 	}
 	public Set<String> getSelectedCategories()
 	{
@@ -78,14 +101,6 @@ public class SearchBar
 		while (iter.hasNext())
 		{
 			iter.next().update(storage);
-		}
-	}
-
-	private class ClearTrigger
-		implements ActionListener
-	{
-		public void actionPerformed(ActionEvent ev) {
-			reset();
 		}
 	}
 	/*

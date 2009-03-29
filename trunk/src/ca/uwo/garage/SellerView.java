@@ -138,9 +138,9 @@ public class SellerView extends View
 	{
 		delete.addActionListener(ev);
 	}
-	public String getListSelect()
+	public GarageSale getListSelect()
 	{
-		return garageList.getSelectedItem();
+		return (GarageSale) garageList.getSelectedValue();
 	}
 	public static void main(String[] args)
 	{

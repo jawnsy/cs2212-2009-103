@@ -8,6 +8,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 import ca.uwo.garage.storage.Category;
 import ca.uwo.garage.storage.CategoryException;
+import ca.uwo.garage.storage.GarageSale;
 import ca.uwo.garage.storage.Storage;
 import ca.uwo.garage.storage.StorageEmptyException;
 import ca.uwo.garage.storage.StorageFullException;
@@ -56,15 +57,27 @@ implements Controller
 	private class DeleteTrigger
 		implements ActionListener
 	{
-		public void actionPerformed(ActionEvent arg0) 
+		public void actionPerformed(ActionEvent ev) 
 		{
-			String garageName = m_view.getListSelect();
-			if (garageName != null)
+			GarageSale sale = m_view.getListSelect();
+			if (sale == null)
 			{
-				
-				GarageSale sale = m_storage.findGarageSale(saleid)
+				JOptionPane.showMessageDialog(
+						m_view,
+						"Please select a garage sale to delete.", // Text
+						"Garage Sale Deletion Error",
+						JOptionPane.ERROR_MESSAGE
+					);
+				return;
 			}
-			
+
+			// not null, so do stuff now
+			try {
+				m_storage.delete(sale);
+				//m_view.updateList()
+			} catch (StorageNotFoundException e) {
+				// should not happen
+			}
 		}
 		
 	}

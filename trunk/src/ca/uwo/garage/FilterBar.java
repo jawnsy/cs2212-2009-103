@@ -6,7 +6,6 @@ import java.awt.FlowLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -16,12 +15,15 @@ import java.util.Set;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 
 import ca.uwo.garage.storage.Category;
+import ca.uwo.garage.storage.GeoPosition;
+import ca.uwo.garage.storage.GeoPositionException;
 import ca.uwo.garage.storage.Storage;
 import ca.uwo.garage.storage.StorageEmptyException;
 import ca.uwo.garage.storage.User;
@@ -64,6 +66,34 @@ public class FilterBar
 	public void reset()
 	{
 		m_selector.getModel().setSelectedItem(searchBy[0]);
+	}
+	public GeoPosition getGeoPosition()
+	{
+		return m_radius.getGeoPosition();
+	}
+	public double getGeoDistance()
+	{
+		double distance = -1;
+		try {
+			distance = Double.parseDouble(m_radius.distance.getText());
+			if (distance <= 0)
+			{
+				JOptionPane.showMessageDialog(
+						null,
+						"Distance values must be greater than zero km.",
+						"Error in Distance Constraint",
+						JOptionPane.ERROR_MESSAGE
+					);
+			}
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(
+					null,
+					"Error parsing distance value. Please make sure it's a decimal number.",
+					"Error Reading Distance Constraint",
+					JOptionPane.ERROR_MESSAGE
+				);
+		}
+		return distance;
 	}
 
 	public void itemStateChanged(ItemEvent evt)
@@ -129,6 +159,48 @@ public class FilterBar
 			add(longitude);
 
 			add(new JLabel(")"));
+		}
+		public GeoPosition getGeoPosition()
+		{
+			double latVal, longVal;
+			GeoPosition geo = null;
+			try {
+				latVal = Double.parseDouble(latitude.getText());
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(
+						null,
+						"Error parsing latitude value, does it contain non-numeric characters?",
+						"Error Deciphering Latitude Value",
+						JOptionPane.ERROR_MESSAGE
+					);
+				return null;
+			}
+
+			try {
+				longVal = Double.parseDouble(longitude.getText());
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(
+						null,
+						"Error parsing longitude value, does it contain non-numeric characters?",
+						"Error Deciphering Longitude Value",
+						JOptionPane.ERROR_MESSAGE
+					);
+				return null;
+			}
+
+			try {
+				geo = new GeoPosition(latVal, longVal);
+			} catch (GeoPositionException e) {
+				JOptionPane.showMessageDialog(
+						null,
+						"Error in latitude/longitude pair:\n" +
+						e.getMessage(),
+						"Invalid Latitude/Longitude Pair",
+						JOptionPane.ERROR_MESSAGE
+					);
+				return null;
+			}
+			return geo;
 		}
 	}
 
