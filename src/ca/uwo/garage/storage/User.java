@@ -50,7 +50,7 @@ public class User
 		if (userid.length() != USERIDLEN)
 			throw new UserException("The specified userid must be exactly " + USERIDLEN + "characters long");
 
-		m_userid = userid;
+		m_userid = userid.toLowerCase();
 		m_password = "aaa";
 	}
 
