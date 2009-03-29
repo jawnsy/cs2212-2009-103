@@ -59,41 +59,36 @@ public class SerializedStorage
 	 */
 	public void computeAllUserRatings()
 	{
-		Iterator<User> tempIterator = m_user.values().iterator();
-		User tempUser;
-		
-		while (tempIterator.hasNext())
-		{
-			tempUser = tempIterator.next();
-			
-			computeUserRating(tempUser);
+		Iterator<User> iter = m_user.values().iterator();
+		User user;		
+		while (iter.hasNext()) {
+			user = iter.next();
+			computeUserRating(user);
 		}
 		
 	}
+
 	/**
 	 * This function calculates the rating of a specific user
 	 * @param user The user you want to calculate the rank for
 	 */
-	
-	
 	public void computeUserRating(User user)
 	{
-		Iterator<GarageSaleRank> tempIterator = m_ratings.iterator();
-		GarageSaleRank tempGarageSaleRank;
+		Iterator<GarageSaleRank> iter = m_ratings.iterator();
+		GarageSaleRank gsr;
+
 		int rank = 0;
 		int counter = 0;
 		
-		while (tempIterator.hasNext() == true)
+		while (iter.hasNext() == true)
 		{
-			tempGarageSaleRank = tempIterator.next();
+			gsr = iter.next();
 			
-			if (tempGarageSaleRank.garageSale().owner() == user)
-			{
-				rank = rank + tempGarageSaleRank.rank();
-				counter ++;
+			if (gsr.garageSale().owner().id().equals(user.id())) {
+				rank = rank + gsr.rank();
+				counter++;
 			}
 		}
-		
 		m_specificUserRating.put(user, (double)rank/counter);
 	}
 	

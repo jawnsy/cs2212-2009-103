@@ -92,4 +92,8 @@ public interface Storage
 
 	public abstract float getAverageRating(GarageSale sale);
 	public abstract GarageSaleRank getRating(User user, GarageSale sale);
+
+	public void computeUserRating(User user);
+	public void computeAllUserRatings();
+	public double getRank(User user);
 }
