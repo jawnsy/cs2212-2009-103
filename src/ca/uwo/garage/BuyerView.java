@@ -5,10 +5,13 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -18,15 +21,17 @@ import ca.uwo.garage.storage.Category;
 import ca.uwo.garage.storage.GarageSale;
 import ca.uwo.garage.storage.Storage;
 import ca.uwo.garage.storage.StorageEmptyException;
+import ca.uwo.garage.storage.User;
 
 @SuppressWarnings("serial")
 public class BuyerView
 	extends View
 {
-	SearchBar m_search;
-	MapPanel m_map;
-	StatusBar m_status;
-	GarageSalePanel m_sales;
+	private SearchBar m_search;
+	private MapPanel m_map;
+	private StatusBar m_status;
+	private GarageSalePanel m_sales;
+	private JButton m_viewInfo;
 
 	public BuyerView(Controller control) {
 		super(control);
@@ -47,7 +52,9 @@ public class BuyerView
 		m_sales.addGarageSaleTrigger(new SaleSelectedTrigger());
 
 		JPanel tools = new JPanel(new FlowLayout());
-		tools.add(new JButton("Test"));
+		m_viewInfo = new JButton("View Info");
+		m_viewInfo.addActionListener(new ViewInfoTrigger());
+		tools.add(m_viewInfo);
 		tools.add(new JButton("Test"));
 		tools.add(new JButton("Test"));
 
@@ -66,6 +73,10 @@ public class BuyerView
 		pack();
 		setResizable(false);
 		setVisible(true);
+	}
+	public void addViewInfoAction(ActionListener ev)
+	{
+		m_viewInfo.addActionListener(ev);
 	}
 	public void update(Storage storage)
 	{
@@ -88,7 +99,54 @@ public class BuyerView
 			m_search.update(((BuyerController)m_control).storage());
 		}
 	}
-
+	private class ViewInfoTrigger
+		implements ActionListener
+	{
+		public void actionPerformed(ActionEvent ev)
+		{
+			//GarageSale sale = m_sales.getSelected();
+			GarageSale sale = null;
+			try
+			{
+				sale = new GarageSale(new User("per4"));
+				sale.address("address");
+				sale.location(90, 43);
+				sale.datetime(new Date(45,453,343,323,32));
+				sale.note("asdsd");
+			}
+			catch (Exception e)
+			{
+				
+			}
+			if (sale != null)
+			{
+				JLabel[] labels = new JLabel[8];
+				labels[0] = new JLabel("Seller: " + sale.owner());
+				labels[1] = new JLabel("Garage Sale Rank: ");
+				labels[2] =  new JLabel("Seller Rank: ");
+				labels[3] = new JLabel("Latitude: " + sale.location().latitude() + " Longitude: " + sale.location().longitude());
+				labels[4] = new JLabel("Address: " + sale.address());
+				labels[5] = new JLabel("Date: " + sale.datetime().toString());
+				
+				String categoryString = "";
+				Set categories = sale.listCategories();
+				Iterator iter = categories.iterator();
+				if (iter.hasNext())
+				{
+					categoryString.concat(iter.next().toString());
+				}
+				while (iter.hasNext())
+				{
+					categoryString.concat(", " + iter.next().toString());
+				}
+				
+				labels[6] = new JLabel("Categories: " + categoryString);
+				labels[7] = new JLabel("Note: " + sale.note());
+				
+				JOptionPane.showMessageDialog(null, labels, "Garage Sale Information", JOptionPane.PLAIN_MESSAGE);
+			}
+		}
+	}
 	private class SearchTrigger
 		implements ActionListener
 	{
@@ -140,5 +198,10 @@ public class BuyerView
 				return;
 			System.out.println("Current address: " + m_sales.getSelected().address());
 		}
+	}
+	public static void main (String[] args)
+	{
+		AdminController control = new AdminController();
+		BuyerView view = new BuyerView(control);
 	}
 }
