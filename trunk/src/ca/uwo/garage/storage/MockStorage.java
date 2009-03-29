@@ -24,6 +24,19 @@ public class MockStorage
 	private transient TreeMap<GarageSale, LinkedList<GarageSaleRank>> m_ratingsBySale;
 	private transient SequenceSet m_sequence;
 
+	public void computeUserRating(User user)
+	{
+		
+	}
+	public void computeAllUserRatings()
+	{
+		
+	}
+	public double getRank(User user)
+	{
+		return 0.0;
+	}
+
 	public MockStorage() {
 		// Instantiate all of the data structures
 		m_user = new TreeMap<String, User>();
