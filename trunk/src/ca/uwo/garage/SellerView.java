@@ -19,7 +19,10 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import ca.uwo.garage.storage.GarageSale;
 import ca.uwo.garage.storage.User;
-
+/**
+ * This class represents the seller view
+ *
+ */
 @SuppressWarnings("serial")
 public class SellerView
 	extends View
@@ -28,6 +31,10 @@ public class SellerView
 	private JList garageList;
 	private TextField bulkTextField;
 
+	/**
+	 * The constructor for this class
+	 * @param control the controller
+	 */
 	public SellerView(Controller control)
 	{	
 		super(control);
@@ -93,14 +100,26 @@ public class SellerView
 		setLocationRelativeTo(null);
 		setLocation(this.getLocationOnScreen().x, this.getLocationOnScreen().y - this.getHeight()/2);
 	}
+	/**
+	 * A method used to get the string in the bulk load text field
+	 * @return
+	 */
 	public String getPath()
 	{
 		return bulkTextField.getText();
 	}
+	/**
+	 * A method to add the action listener for the bulk load button
+	 * @param ev the action listener for the bulk load button
+	 */
 	public void addBulkLoadAction(ActionListener ev)
 	{
 		bulkLoad.addActionListener(ev);
 	}
+	/**
+	 * The action to be performed when the browse button is clicked
+	 *
+	 */
 	private class BrowseTrigger
 		implements ActionListener
 	{
@@ -114,19 +133,37 @@ public class SellerView
 		    }
 		}
 	}
+	/**
+	 * A method used to add the action listener for the add button
+	 * @param ev the action listener for the add button
+	 */
 	public void addAddAction(ActionListener ev)
 	{
 		addNew.addActionListener(ev);
 	}
+	/**
+	 * A method used to add the action listener for the delete button
+	 * @param ev the action listener for the delete button
+	 */
 	public void addDeleteAction(ActionListener ev)
 	{
 		delete.addActionListener(ev);
 	}
+	/**
+	 * A method used to get the selected garage sale in the list of
+	 * garage sales
+	 * @return the selected garage sale
+	 */
 	public GarageSale getListSelect()
 	{
 		return (GarageSale) garageList.getSelectedValue();
 	}
 
+	/**
+	 * A method used to update the garage sale list
+	 * @param sales the garage sales from the user
+	 * @param user the user
+	 */
 	public void update(Collection<GarageSale> sales, User user)
 	{
 		DefaultListModel listModel = new DefaultListModel();

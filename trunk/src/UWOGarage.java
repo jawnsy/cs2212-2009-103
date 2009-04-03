@@ -20,11 +20,19 @@ import ca.uwo.garage.storage.Storage;
 import ca.uwo.garage.storage.StorageException;
 import ca.uwo.garage.storage.User;
 import ca.uwo.garage.storage.UserException;
-
+/**
+ * This class contains the main method for the program
+ * @author Jon
+ *
+ */
 public class UWOGarage {
-	private static Storage m_storage;
-	private static User m_user;
+	private static Storage m_storage; // The storage
+	private static User m_user; // The user using the program
 
+	/**
+	 * This is the main method of the program
+	 * @param args call the program with UWOGarage -admin to run in administrator mode
+	 */
 	public static void main(String[] args)
 	{
 		boolean admin = false;
@@ -52,6 +60,12 @@ public class UWOGarage {
 			reportError(e);
 		}
 	}
+	/**
+	 * A method used to run admin mode
+	 * @throws StorageException
+	 * @throws ViewTypeException
+	 * @throws ControllerNotReadyException
+	 */
 	public static void runAdmin()
 		throws StorageException, ViewTypeException, ControllerNotReadyException
 	{
@@ -65,6 +79,11 @@ public class UWOGarage {
 		control.storage(m_storage);
 		control.start();
 	}
+	
+	/**
+	 * A method to run either buyer or seller mode
+	 * @throws Exception
+	 */
 	public static void runProgram()
 		throws Exception
 	{
@@ -73,7 +92,13 @@ public class UWOGarage {
 		else
 			runSeller();
 	}
-
+	
+	/**
+	 * A method used to run buyer mode
+	 * @throws ViewTypeException
+	 * @throws ControllerNotReadyException
+	 * @throws StorageException
+	 */
 	public static void runBuyer()
 		throws ViewTypeException, ControllerNotReadyException, StorageException
 	{
@@ -89,6 +114,13 @@ public class UWOGarage {
 		control.start();
 	}
 
+	/**
+	 * A method used to run seller mode
+	 * @throws ViewTypeException
+	 * @throws ControllerNotReadyException
+	 * @throws StorageException
+	 * @throws UserException
+	 */
 	public static void runSeller()
 		throws ViewTypeException, ControllerNotReadyException, StorageException, UserException
 	{
@@ -105,7 +137,13 @@ public class UWOGarage {
 		control.start();
 	}
 
-	// Determine whether we're a Buyer Mode
+	/**
+	 * A method to determine whether or not to enter buyer mode
+	 * @return
+	 * @throws StorageException
+	 * @throws ViewTypeException
+	 * @throws ControllerNotReadyException
+	 */
 	public static boolean isBuyerMode()
 		// These shouldn't happen, so throw them
 		throws StorageException, ViewTypeException, ControllerNotReadyException
@@ -168,6 +206,10 @@ public class UWOGarage {
 
 		return control.isBuyerMode();
 	}
+	/**
+	 * A method used to report an error to the system
+	 * @param e the exception that cause the error
+	 */
 	public static void reportError(Exception e)
 	{
 		JTextArea error = new JTextArea(

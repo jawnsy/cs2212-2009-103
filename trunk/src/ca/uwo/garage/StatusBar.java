@@ -5,7 +5,10 @@ import java.awt.Dimension;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
+/**
+ * This class represents a status bar
+ *
+ */
 // Apparently Java has no native StatusBar class... so make one
 public class StatusBar
   extends JPanel
@@ -14,6 +17,9 @@ public class StatusBar
 
   private Component m_left, m_right;
 
+  /**
+   * The constructor for this class
+   */
   public StatusBar() {
     /* By default, make a StatusBar with JLabels on the left and right.
      * 
@@ -22,6 +28,11 @@ public class StatusBar
      */
     this(new JLabel(" ", JLabel.LEFT), new JLabel(" ", JLabel.RIGHT));
   }
+  /**
+   * Another constructor for this class
+   * @param left
+   * @param right
+   */
   public StatusBar(Component left, Component right) {
     super();
 

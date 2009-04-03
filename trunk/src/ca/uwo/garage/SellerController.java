@@ -15,13 +15,18 @@ import ca.uwo.garage.storage.StorageEmptyException;
 import ca.uwo.garage.storage.StorageNotFoundException;
 import ca.uwo.garage.storage.User;
 
+/**
+ * This class performs the actions for the seller view
+ * @author Jon
+ *
+ */
 public class SellerController
 	implements Controller
 {
-	private SellerView m_view;
-	private Storage m_storage;
+	private SellerView m_view; //The view object
+	private Storage m_storage; //The storage object
 	private boolean m_ready;
-	private User m_user;
+	private User m_user; //The user object
 
 	public SellerController()
 	{
@@ -31,6 +36,9 @@ public class SellerController
 		m_user = null;
 	}
 
+	/**
+	 * A method used to start the controller
+	 */
 	public void start()
 	throws ControllerNotReadyException
 	{
@@ -47,6 +55,9 @@ public class SellerController
 		}
 	}
 
+	/**
+	 * A method used to display the view object
+	 */
 	public void view(View view) throws ViewTypeException
 	{
 		if (!(view instanceof SellerView))
@@ -55,14 +66,20 @@ public class SellerController
 		m_view = (SellerView) view;
 		m_view.addWindowListener(new CloseTrigger());
 		m_view.addDeleteAction(new DeleteTrigger());
-		m_view.addAddAction(new AddTrigger());
 		m_view.addBulkLoadAction(new BulkLoadTrigger());
 	}
 
+	/**
+	 * A method used to determine whether or not the controller has started
+	 */
 	public boolean isReady() 
 	{
 		return m_ready;
 	}
+	/**
+	 * The action to be performed when the user clicks the bulk load button
+	 *
+	 */
 	private class BulkLoadTrigger
 		implements ActionListener
 	{
@@ -93,6 +110,10 @@ public class SellerController
 			}
 		}		
 	}
+	/**
+	 * The action to be performed when the delete button is clicked
+	 *
+	 */
 	private class DeleteTrigger
 		implements ActionListener
 	{
@@ -125,6 +146,10 @@ public class SellerController
 		
 	}
 
+	/**
+	 * Closes the program
+	 *
+	 */
 	private class CloseTrigger
 		extends WindowAdapter
 	{
@@ -134,19 +159,13 @@ public class SellerController
 			m_view.dispose();
 		}
 	}
-	private class AddTrigger
-		implements ActionListener
-	{
-		public void actionPerformed(ActionEvent ev) {
-		}
-	}
 
+	/**
+	 * A method used to get the storage object
+	 * @param storage the storage object
+	 */
 	public void storage(Storage storage)
 	{
 		m_storage = storage;
-	}
-
-	public void user(User user) {
-		m_user = user;
 	}
 }

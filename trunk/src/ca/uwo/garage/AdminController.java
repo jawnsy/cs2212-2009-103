@@ -17,19 +17,29 @@ import ca.uwo.garage.storage.StorageNotFoundException;
 import ca.uwo.garage.storage.User;
 import ca.uwo.garage.storage.UserException;
 
+/**
+ *This class performs all the actions for admin mode
+ * @author Jon
+ *
+ */
 public class AdminController
 	implements Controller
 {
-	private AdminView m_view;
-	private boolean m_ready;
-	private Storage m_storage;
-	
+	private AdminView m_view; //The view object
+	private boolean m_ready; //Stores whether or not the controller has been started
+	private Storage m_storage; //The storage object
+	/**
+	 * The constructor for this class
+	 */
 	public AdminController()
 	{
-		m_view = null;
+		m_view = null; 
 		m_ready = false;
 		m_storage = null;
 	}
+	/**
+	 * A method used to start the controller
+	 */
 	public void start()
 		throws ControllerNotReadyException
 	{
@@ -44,6 +54,9 @@ public class AdminController
 		} catch (StorageEmptyException e) {
 		}
 	}
+	/**
+	 * Method used to display the view object
+	 */
 	public void view(View view)
 		throws ViewTypeException
 	{
@@ -61,13 +74,26 @@ public class AdminController
 		m_view.addUpdateCategoryAction(new CategoryUpdateTrigger());
 		m_view.addDeleteCategoryAction(new CategoryDeleteTrigger());
 	}
+	
+	/**
+	 * A method used to return the storage object
+	 * @param storage the storage object
+	 */
 	public void storage(Storage storage)
 	{
 		m_storage = storage;
 	}
+	/**
+	 * Method used to return whether or not the controller jas been started
+	 */
 	public boolean isReady() {
 		return m_ready;
 	}
+	/**
+	 * Method used to get a user object associated with a user ID
+	 * @param userid the user ID
+	 * @return the user object
+	 */
 	public User getUser(String userid)
 	{
 		User user = null;
@@ -78,6 +104,10 @@ public class AdminController
 		return user;
 	}
 
+	/**
+	 * The action listener for the category add button
+	 *
+	 */
 	private class CategoryAddTrigger
 		implements ActionListener
 	{
@@ -127,6 +157,11 @@ public class AdminController
 			}
 		}
 	}
+	
+	/**
+	 * The action listener for the category delete button
+	 *
+	 */
 	private class CategoryDeleteTrigger
 		implements ActionListener
 	{
@@ -168,6 +203,11 @@ public class AdminController
 			}
 		}
 	}
+	
+	/**
+	 * The action listener for the category update button
+	 *
+	 */
 	private class CategoryUpdateTrigger
 		implements ActionListener
 	{
@@ -228,6 +268,10 @@ public class AdminController
 		}
 	}
 
+	/**
+	 * The action listener for the user add button
+	 *
+	 */
 	private class UserAddTrigger
 		implements ActionListener
 	{
@@ -274,6 +318,11 @@ public class AdminController
 			}
 		}
 	}
+	
+	/**
+	 * The action listener for the user delete button
+	 *
+	 */
 	private class UserDeleteTrigger
 		implements ActionListener
 	{
@@ -296,6 +345,10 @@ public class AdminController
 		}
 	}
 
+	/**
+	 * The action listener for the user update button
+	 *
+	 */
 	private class UserUpdateTrigger
 		implements ActionListener
 	{
@@ -343,6 +396,11 @@ public class AdminController
 		}
 	}
 
+	/**
+	 * The action listener for the window close button
+	 * @author James
+	 *
+	 */
 	private class CloseTrigger
 		extends WindowAdapter
 	{
