@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.TreeMap;
 import ca.uwo.garage.storage.GeoPosition;
 
-/* The Mock storage class is a mock-up of a Storage implementation, useful for
+/** The Mock storage class is a mock-up of a Storage implementation, useful for
  * testing. It will pretend to insert properly, but doesn't do anything. It's
  * really only useful for testing retrievals.
  */
@@ -37,6 +37,10 @@ public class MockStorage
 		return 0.0;
 	}
 
+	/**
+	 * This Constructor initializes 
+	 * all of the attribues 
+	 */
 	public MockStorage() {
 		// Instantiate all of the data structures
 		m_user = new TreeMap<String, User>();
@@ -48,6 +52,12 @@ public class MockStorage
 		m_ratingsBySale = new TreeMap<GarageSale, LinkedList<GarageSaleRank>>();
 	}
 
+	/**
+	 * This method creates a bunch of fake 
+	 * objects so we can test our code
+	 * @throws StorageException This exception is thrown if 
+	 * any of the Storage classes encounter a problem
+	 */
 	public void connect()
 		throws StorageException
 	{
@@ -102,12 +112,30 @@ public class MockStorage
 	{
 	}
 
+	/**
+	 * This method checks to see if 
+	 * our collection object is empty
+	 * @returns boolean Whether or not the 
+	 * collection object was empty
+	 */
 	public boolean isEmpty() {
 		return false;
 	}
+	
+	/**
+	 * This method checks to see if the
+	 * collection object is full
+	 * @returns boolean Whether or not the 
+	 * collection was full
+	 */
 	public boolean isFull() {
 		return false; // can never be full, until we run out of memory
 	}
+	/**
+	 * This method adds up the sizes of all
+	 * of the categories and returns an int
+	 * @returns The sum of the categories sizes
+	 */
 	public int size() {
 		return (
 			m_user.size() +
@@ -116,9 +144,17 @@ public class MockStorage
 			m_ratings.size()
 		);
 	}
+	
 	public long length() {
 		return 0;
 	}
+	/**
+	 * This method looks for a user object
+	 * @throws StorageNotFoundException This exception
+	 * is thrown if the userid entered does not exist
+	 * @param userid The id of the user we are looking for
+	 * @returns User The user we are looking for
+	 */
 	public User findUser(String userid)
 		throws StorageNotFoundException
 	{
@@ -127,12 +163,31 @@ public class MockStorage
 
 		return m_user.get(userid);
 	}
+	/**
+	 * This method checks to see if a given
+	 * userid has been taken yet
+	 * @param userid The id we are checking
+	 * @returns boolean Whether or not the 
+	 * userid entered exists yet in storage
+	 */
 	public boolean existsUser(String userid) {
 		return m_user.containsKey(userid);
 	}
+	/**
+	 * This method returns all of the users currently
+	 * in storage in a Collection object
+	 * @returns Collection A Collection object containing
+	 * all of the users currently in storage
+	 */
 	public Collection<User> listUsers() {
 		return m_user.values();
 	}
+	/**
+	 * This method adds a user
+	 * @param The user object we want to add
+	 * @throws StorageKeyException This exception is thrown
+	 * if the user object shares an id with an existing one
+	 */
 	public void store(User user)
 		throws StorageKeyException
 	{
@@ -142,6 +197,13 @@ public class MockStorage
 
 		m_user.put(userid, user);
 	}
+	
+	/**
+	 * This method removes a user
+	 * @throws StorageNotFoundException This exception is
+	 * thrown if the user entered doesn't exist
+	 * @param user The user we want to remove
+	 */
 	public void delete(User user)
 		throws StorageNotFoundException
 	{
@@ -150,6 +212,15 @@ public class MockStorage
 			throw new StorageNotFoundException("users", userid);
 		m_user.remove(userid);
 	}
+	
+	/**
+	 * This method returns a category
+	 * with the given id
+	 * @throws StorageNotFoundException If no Category with 
+	 * the given id exists this exception is thrown
+	 * @param categoryid The id we are searching for
+	 * @return Category The Category we are searching for
+	 */
 	public Category findCategory(int categoryid)
 		throws StorageNotFoundException
 	{
@@ -157,12 +228,30 @@ public class MockStorage
 			throw new StorageNotFoundException("categories", categoryid);
 		return m_category.get(categoryid);
 	}
+	/**
+	 * This method checks to see if a 
+	 * Category with the given id exists
+	 * @returns boolean Whether or not 
+	 * a Category with the given id exists
+	 */
 	public boolean existsCategory(int categoryid) {
 		return m_category.containsKey(categoryid);
 	}
+	/**
+	 * This method returns all of the 
+	 * categories currently in storage
+	 * @returns Collection All of the categories
+	 */
 	public Collection<Category> listCategories() {
 		return m_category.values();
 	}
+	/**
+	 * This method adds a category
+	 * @throws StorageFullException This exception is 
+	 * thrown if there isn't room for another category
+	 * @throws StorageKeyException This exception is
+	 * thrown if the category's id is taken
+	 */
 	public void store(Category category)
 		throws StorageFullException, StorageKeyException
 	{
@@ -184,6 +273,13 @@ public class MockStorage
 
 		m_category.put(categoryid, category);
 	}
+	
+	/**
+	 * This method deletes a category
+	 * @throws StorageNotFoundException If the category 
+	 * object doesn't exist, this exception is thrown
+	 * @param category The category we want to remove
+	 */
 	public void delete(Category category)
 		throws StorageNotFoundException
 	{
@@ -195,6 +291,15 @@ public class MockStorage
 		m_category.remove(categoryid);
 	}
 
+	/**
+	 * This method adds a GarageSale object
+	 * @throws StorageFullException If the storage 
+	 * is full this exception is thrown
+	 * @throws StorageKeyException If the entered
+	 * GarageSale object shares an id with an existing 
+	 * GarageSale object this exception is thrown
+	 * @param sale The object we want to add
+	 */
 	public void store(GarageSale sale)
 		throws StorageFullException, StorageKeyException
 	{
@@ -216,6 +321,12 @@ public class MockStorage
 
 		m_sales.put(saleid, sale);
 	}
+	/**
+	 * This method removes a GarageSale 
+	 * @throws StorageNotFoundException This is thrown
+	 * if the GarageSale object entered doesn't exist
+	 * @param sale The sale we want to remove
+	 */
 	public void delete(GarageSale sale)
 		throws StorageNotFoundException
 	{
@@ -226,14 +337,39 @@ public class MockStorage
 
 		m_sales.remove(saleid);
 	}
+	/**
+	 * This method loops through all of the existing
+	 * GarageSales looking for whether or not a GarageSale
+	 * object with the entered id exists
+	 * @param saleid The id we're searching for
+	 * @returns boolean Whether or not the id exists
+	 */
 	public boolean existsSale(int saleid) {
 		return m_sales.containsKey(saleid);
 	}
+	/**
+	 * This Accessor method returns all of
+	 * the GarageSales currently being stored
+	 * @throws StorageEmptyException This is thrown 
+	 * if there are no GarageSales in the Collection
+	 * @returns m_sales.values A collection object that
+	 * contains all of the GarageSales
+	 */
 	public Collection<GarageSale> listGarageSales()
 		throws StorageEmptyException
 	{
 		return m_sales.values();
 	}
+	
+	/**
+	 * This method loops through all of the GarageSales
+	 * looking for the one that matches the id entered
+	 * @throws StorageNotFoundException If the saleid is 
+	 * invalid this exception is thrown
+	 * @param saleid The id of the GarageSale 
+	 * object we're looking for
+	 * @returns GarageSale The GarageSale we're looking for
+	 */
 	public GarageSale findGarageSale(int saleid)
 		throws StorageNotFoundException
 	{
@@ -242,10 +378,21 @@ public class MockStorage
 		return m_sales.get(saleid);
 	}
 
+	/**
+	 * This method deletes a specifc 
+	 * GarageSaleRank from a GarageSale
+	 * @param gsr The rank we want to remove
+	 */
 	public void delete(GarageSaleRank gsr)
 	{
 		m_ratings.remove(gsr);
 	}
+	
+	/**
+	 * This method loops through all of the user's 
+	 * ratings for their GarageSales and deletes them
+	 * @param user The user we want to delete the ratings of
+	 */
 	public void deleteRatings(User user)
 	{
 		Iterator<GarageSaleRank> iter = m_ratingsByUser.get(user).iterator();
@@ -255,6 +402,12 @@ public class MockStorage
 		}
 		m_ratingsByUser.remove(user);
 	}
+	
+	/**
+	 * This method loops through all of the ratings of a given
+	 * GarageSale and deletes all of the entries
+	 * @param sale The GarageSale we want to wipe the ratings of
+	 */
 	public void deleteRatings(GarageSale sale)
 	{
 		Iterator<GarageSaleRank> iter = m_ratingsBySale.get(sale).iterator();
@@ -264,6 +417,12 @@ public class MockStorage
 		}
 		m_ratingsBySale.remove(sale);
 	}
+	/**
+	 * This method searches through the Categories and 
+	 * returns an int (the id) of the Category object
+	 * @param name The name of the category whose id we're looking for
+	 * @returns int The id of the category object
+	 */
 	public int getCategoryIdByName(String name)
 	{
 		Iterator<Category> iter = m_category.values().iterator();
@@ -278,6 +437,13 @@ public class MockStorage
 		return -1;
 	}
 
+	/**
+	 * This method gets a GarageSale's rank, but it 
+	 * only goes through a specific user's GarageSales
+	 * @param user The user who owns the GarageSale
+	 * @param sale The sale we want the rank of
+	 * @returns rank The tank we're looking for
+	 */
 	public GarageSaleRank getRating(User user, GarageSale sale)
 	{
 		LinkedList<GarageSaleRank> ratings = m_ratingsByUser.get(user);
@@ -303,6 +469,11 @@ public class MockStorage
 
 		return rank;
 	}
+	/**
+	 * This method gets the average rank of the GarageSale object
+	 * @param sale The object we want the rank of
+	 * @returns float A float of the rating after the average has been computed
+	 */
 	public float getAverageRating(GarageSale sale)
 	{
 		LinkedList<GarageSaleRank> ratings = m_ratingsBySale.get(sale);
@@ -316,6 +487,10 @@ public class MockStorage
 		// Average them and return the result
 		return ((float) sum / ratings.size());
 	}
+	
+	/**
+	 * This method clears the MockStorage object
+	 */
 	public void clear() {
 		m_user.clear();
 		m_category.clear();
