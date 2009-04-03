@@ -36,10 +36,20 @@ public class MapPanel
 	private transient JXMapKit m_mapKit;
 	private Set<GarageWaypoint> waypoints;
 
+	/**
+	 * Constructor for the MapPanel class
+	 */
 	public MapPanel()
 	{
 		this(new OpenMapProvider());
 	}
+	
+	/**
+	 * This is a better constructor.  When given the province we need
+	 * the map for, this constructor does everything we need for the 
+	 * google map code to work in our program.
+	 * @param prov The province we need the map for
+	 */
 	public MapPanel(MapProvider prov)
 	{
 		super();
@@ -117,12 +127,21 @@ public class MapPanel
 	        });
 		}
 
-			
+	/** 
+	 * This method takes in a GarageSale object 
+	 * and adds a WayPoint to it
+	 * @param gs The GarageSale object
+	 */
 	public void addWayPoint(GarageSale gs ){
 		GarageWaypoint wayPoint=new GarageWaypoint(gs.location(),gs);
         waypoints.add(wayPoint);
 	}
 	
+	/**
+	 * This method takes in a GarageWarPoint object to be
+	 * removed from the GarageSale object
+	 * @param gwp The GarageWayPoint
+	 */
 	public void removeWayPoint(GarageWaypoint gwp){
 		for (GarageWaypoint wp:waypoints){
 			if((wp.getPosition().getLatitude()==gwp.getPosition().getLatitude())&&(wp.getPosition().getLongitude()==gwp.getPosition().getLongitude())){
@@ -130,7 +149,10 @@ public class MapPanel
 			}
 		}
 	}
-	
+	/**
+	 * Accessor Method for the GarageWaypoint attribute
+	 * @return returns all the GarageWaypoints 
+	 */
 	public GarageWaypoint getWayPoint(){
 		GarageWaypoint gwp=null;
 			for(GarageWaypoint gw: waypoints){
@@ -138,6 +160,11 @@ public class MapPanel
 			}
 			return gwp;
 	}
+	
+	/**
+	 * Accessor Method for the JXMapKit attribute
+	 * @returns m_mapKit
+	 */
 	public JXMapKit getJXMapKit(){
 		return m_mapKit;
 	}
