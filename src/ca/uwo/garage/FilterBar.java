@@ -27,7 +27,11 @@ import ca.uwo.garage.storage.GeoPositionException;
 import ca.uwo.garage.storage.Storage;
 import ca.uwo.garage.storage.StorageEmptyException;
 import ca.uwo.garage.storage.User;
-
+/**
+ * This class represents the search bar for the buyer view
+ * @author Jon
+ *
+ */
 @SuppressWarnings("serial")
 public class FilterBar
 	extends JPanel
@@ -50,6 +54,9 @@ public class FilterBar
 	private DateFilter m_date;
 	private SellerFilter m_seller;
 
+	/**
+	 * The constuctor for this class
+	 */
 	public FilterBar()
 	{
 		setLayout(new BorderLayout());
@@ -58,11 +65,18 @@ public class FilterBar
 		m_selector.addItemListener(this);
 		add(m_selector, BorderLayout.WEST);
 	}
+	/**
+	 * A method to update the GUI when a new filter is seleced
+	 * @param storage the storage object
+	 */
 	public void update(Storage storage)
 	{
 		m_filter = new FilterPlaceholder(storage);
 		add(m_filter, BorderLayout.EAST);
 	}
+	/**
+	 * A method used to reset the filter bar
+	 */
 	public void reset()
 	{
 		m_selector.getModel().setSelectedItem(searchBy[0]);
@@ -71,6 +85,10 @@ public class FilterBar
 	{
 		return m_radius.getGeoPosition();
 	}
+	/**
+	 * A method used to get the string in the distance text field as a double
+	 * @return the string in the text field as a double
+	 */
 	public double getGeoDistance()
 	{
 		double distance = -1;
@@ -102,7 +120,10 @@ public class FilterBar
 		// Change the panel based on the selected ComboBox text
 		cl.show(m_filter, (String) evt.getItem());
 	}
-
+	/**
+	 * A method used to return the mode selected as a string
+	 * @return the mode selected as a string
+	 */
 	public String mode()
 	{
 		switch (m_selector.getSelectedIndex())
@@ -137,6 +158,10 @@ public class FilterBar
 		}
 	}
 
+	/**
+	 * A class to represent a radius filter panel
+	 *
+	 */
 	private class RadiusFilter
 		extends JPanel
 	{
@@ -217,6 +242,10 @@ public class FilterBar
 		}
 		return set;
 	}
+	/**
+	 * A class used to represent the category filter panel
+	 *
+	 */
 	private class CategoryFilter
 		extends JPanel
 	{
@@ -241,6 +270,10 @@ public class FilterBar
 		}
 	}
 
+	/**
+	 * A class used to represent a date filter panel
+	 *
+	 */
 	private class DateFilter
 		extends JPanel
 	{
@@ -292,6 +325,10 @@ public class FilterBar
 		}
 	}
 
+	/**
+	 * A class used to represent a seller filter panel
+	 *
+	 */
 	private class SellerFilter
 		extends JPanel
 	{

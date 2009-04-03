@@ -14,7 +14,11 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-
+/**
+ * This class represents the authorization view
+ * @author Jon
+ *
+ */
 @SuppressWarnings("serial")
 public class AuthorizationView
 	extends View
@@ -24,6 +28,10 @@ public class AuthorizationView
 	private JPasswordField m_password;
 	private JButton m_login;
 
+	/**
+	 * The constructor for this class
+	 * @param controller the controller for this view
+	 */
 	public AuthorizationView(AuthorizationController controller)
 	{
 		super(controller);
@@ -91,26 +99,44 @@ public class AuthorizationView
 		setLocation(getLocationOnScreen().x, getLocationOnScreen().y - getHeight()/2);
 	}
 
+	/**
+	 * A method to reset the components in the window
+	 */
 	public void reset()
 	{
 		m_userid.setText("");
 		m_userid.requestFocusInWindow();
 		m_password.setText("");
 	}
+	/**
+	 * A method to determine whether or not buyer mode is selected
+	 * @return true if buyer mode is selected
+	 */
 	public boolean isBuyerMode()
 	{
 		return m_buyer.isSelected();
 	}
+	/**
+	 * A method used to return the string in the user ID text field
+	 * @return the string in the user ID text field
+	 */
 	public String getUserId()
 	{
 		return m_userid.getText();
 	}
+	/**
+	 * A method to return the string in the password text field
+	 * @return the string in the password textfield
+	 */
 	public String getPassword()
 	{
 		// getPassword returns a char[], convert it to a string
 		return new String(m_password.getPassword());
 	}
-
+	/**
+	 * Adds the action listener for the login button
+	 * @param trigger the action listener for the login button
+	 */
 	public void addLoginAction(ActionListener trigger)
 	{
 		m_login.addActionListener(trigger);

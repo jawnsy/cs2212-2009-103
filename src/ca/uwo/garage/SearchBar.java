@@ -13,7 +13,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import ca.uwo.garage.storage.Storage;
-
+/**
+ * A class used to represent a search filter panel
+ * @author Jon
+ *
+ */
 @SuppressWarnings("serial")
 public class SearchBar
 	extends JPanel
@@ -22,6 +26,9 @@ public class SearchBar
 	private static final int FILTERS = 3;
 	private JButton m_start, m_reset;
 	
+	/**
+	 * The constructor for this class
+	 */
 	public SearchBar()
 	{
 		setLayout(new GridLayout(2 + FILTERS, 1));
@@ -43,15 +50,27 @@ public class SearchBar
 
 		add(bottom);
 	}
+	/**
+	 * A method used to add the action listener for the start button
+	 * @param ev the action listener for the start button
+	 */
 	public void addSearchTrigger(ActionListener ev)
 	{
 		m_start.addActionListener(ev);
 	}
+	/**
+	 * A method used to add the action listener for the reset button
+	 * @param ev the action listener for the reset button
+	 */
 	public void addResetTrigger(ActionListener ev)
 	{
 		m_reset.addActionListener(ev);
 	}
 
+	/**
+	 * A method used to return the GeoConstraints
+	 * @return the GeoConstraints
+	 */
 	public Collection<GeoConstraint> getGeoConstraints()
 	{
 		Iterator<FilterBar> iter = m_filters.iterator();
@@ -81,11 +100,17 @@ public class SearchBar
 		return selected;
 	}
 
+	/**
+	 * A method used to add a new filter bar
+	 */
 	public void addFilterRow() {
 		FilterBar filter = new FilterBar();
 		m_filters.add(filter);
 		add(filter);
 	}
+	/**
+	 * A method used to reset the search bar
+	 */
 	public void reset() {
 		Iterator<FilterBar> iter = m_filters.iterator();
 		while (iter.hasNext())
@@ -94,6 +119,10 @@ public class SearchBar
 		}
 	}
 
+	/**
+	 * A method ysed to update the search bar
+	 * @param storage the storage object
+	 */
 	public void update(Storage storage) {
 		Iterator<FilterBar> iter = m_filters.iterator();
 		while (iter.hasNext())

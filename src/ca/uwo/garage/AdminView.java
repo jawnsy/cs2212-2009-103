@@ -21,13 +21,22 @@ import javax.swing.event.ListSelectionListener;
 
 import ca.uwo.garage.storage.Category;
 import ca.uwo.garage.storage.User;
-
+/**
+ * The class that represents the admin view
+ * @author Jon
+ *
+ */
 @SuppressWarnings("serial")
 public class AdminView
 	extends View
 {
 	private UserPanel m_users;
 	private CategoryPanel m_categories;
+	
+	/**
+	 * The constructor for the class
+	 * @param control The controller associated with this object
+	 */
 	public AdminView(Controller control) {
 		super(control);
 		setTitle("Admin View");
@@ -48,6 +57,11 @@ public class AdminView
 	    setVisible(true);
 	    setResizable(false);
 	}
+	
+	/**
+	 * A method to populate the list of users in the system
+	 * @param users the users in the system
+	 */
 	public void setUserList(Collection<User> users)
 	{
 		Iterator<User> iter = users.iterator();
@@ -66,6 +80,11 @@ public class AdminView
 		if (!listModel.isEmpty())
 			m_users.list.setSelectedIndex(0);
 	}
+	
+	/**
+	 * A method to populate the list of categories in the system
+	 * @param categories the categories in the system
+	 */
 	public void setCategoryList(Collection<Category> categories)
 	{
 		Iterator<Category> iter = categories.iterator();
@@ -84,67 +103,125 @@ public class AdminView
 		if (!listModel.isEmpty())
 			m_categories.list.setSelectedIndex(0);
 	}
-
+	/**
+	 * Adds the add category button to the action listener
+	 * @param ev the action listener for this button
+	 */
 	public void addAddCategoryAction(ActionListener ev)
 	{
 		m_categories.add.addActionListener(ev);
 	}
+	/**
+	 * Adds the delete category button to the action listener
+	 * @param ev the action listener for this button
+	 */
 	public void addDeleteCategoryAction(ActionListener ev)
 	{
 		m_categories.delete.addActionListener(ev);
 	}
+	/**
+	 * Adds the update category button to the action listener
+	 * @param ev the action listener for this button
+	 */
 	public void addUpdateCategoryAction(ActionListener ev)
 	{
 		m_categories.modify.addActionListener(ev);
 	}
+	/**
+	 * Returns the category selected in the list
+	 * @return
+	 */
 	public String getSelectedCategory()
 	{
 		return (String)m_categories.list.getSelectedValue();
 	}
-
+	/**
+	 * Adds the add user button to the action listener
+	 * @param ev the action listener for this button
+	 */
 	public void addAddUserAction(ActionListener ev)
 	{
 		m_users.add.addActionListener(ev);
 	}
+	/**
+	 * Adds the delete user button to the action listener
+	 * @param ev the action listener for this button
+	 */
 	public void addDeleteUserAction(ActionListener ev)
 	{
 		m_users.delete.addActionListener(ev);
 	}
+	/**
+	 * Adds the update user button to the action listener
+	 * @param ev the action listener for this button
+	 */
 	public void addUpdateUserAction(ActionListener ev)
 	{
 		m_users.modify.addActionListener(ev);
 	}
+	/**
+	 * Returns the string in the user text field
+	 * @return the string
+	 */
 	public String getUserId()
 	{
 		return m_users.userid.getText();
 	}
+	/**
+	 * Returns the string in the first name text field
+	 * @return the string
+	 */
 	public String getFirstName()
 	{
 		return m_users.firstName.getText();
 	}
+	/**
+	 * Returns the string in the last name text field
+	 * @return the string
+	 */
 	public String getLastName()
 	{
 		return m_users.lastName.getText();
 	}
+	/**
+	 * Returns the string in the phone number text field
+	 * @return the string
+	 */
 	public String getPhone()
 	{
 		return m_users.phone.getText();
 	}
+	/**
+	 * Returns the string in the password text field
+	 * @return the string
+	 */
 	public String getPassword()
 	{
 		return m_users.password.getText();
 	}
+	/**
+	 * Returns true if the admin changed the password, false otherwise
+	 * @return the boolean value
+	 */
 	public boolean passwordChanged()
 	{
 		// If getText is empty, then the password wasn't changed
 		return !m_users.password.getText().isEmpty();
 	}
 
+	/**
+	 * A class that represents the panel for the category tab
+	 * @author Jon
+	 *
+	 */
 	private class CategoryPanel
 		extends JPanel
 	{
 		JList list;
 		JButton add, modify, delete;
+		/**
+		 * Constructor for this class
+		 */
 		public CategoryPanel()
 		{
 			setLayout(new BorderLayout());
@@ -168,6 +245,11 @@ public class AdminView
 		}
 	}
 
+	/**
+	 * A class that represents the panel for the user tab
+	 * @author Jon
+	 *
+	 */
 	private class UserPanel
 		extends JPanel
 	{
@@ -175,6 +257,9 @@ public class AdminView
 		JList list;
 		JTextField userid, firstName, lastName, zoom, phone, password;
 
+		/**
+		 * Constructor for this class
+		 */
 		public UserPanel()
 		{
 			setLayout(new BorderLayout());
@@ -232,6 +317,11 @@ public class AdminView
 			add(right, BorderLayout.EAST);
 		}
 
+		/**
+		 * The list selection listener
+		 * @author Jon
+		 *
+		 */
 		private class UserSelectionTrigger
 			implements ListSelectionListener
 		{

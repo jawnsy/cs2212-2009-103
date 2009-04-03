@@ -22,6 +22,9 @@ import ca.uwo.garage.storage.Storage;
 import ca.uwo.garage.storage.StorageEmptyException;
 
 @SuppressWarnings("serial")
+/**
+ * This class represents the buyer view
+ */
 public class BuyerView
 	extends View
 {
@@ -31,6 +34,10 @@ public class BuyerView
 	private GarageSalePanel m_sales;
 	private JButton m_viewInfo;
 	
+	/**
+	 * The constructor for this class
+	 * @param control the controller for this view
+	 */
 	public BuyerView(Controller control) {
 		super(control);
 
@@ -72,10 +79,18 @@ public class BuyerView
 		setResizable(false);
 		setVisible(true);
 	}
+	/**
+	 * A method used to add the action listener for the view info button 
+	 * @param ev the action listener
+	 */
 	public void addViewInfoAction(ActionListener ev)
 	{
 		m_viewInfo.addActionListener(ev);
 	}
+	/**
+	 * A method used to update the storage object
+	 * @param storage the storage object
+	 */
 	public void update(Storage storage)
 	{
 		m_search.update(storage);
@@ -88,6 +103,10 @@ public class BuyerView
 		pack();
 	}
 
+	/**
+	 * A method used to reset the view
+	 *
+	 */
 	private class ClearTrigger
 		implements ActionListener
 	{
@@ -97,6 +116,11 @@ public class BuyerView
 			m_search.update(((BuyerController)m_control).storage());
 		}
 	}
+	/**
+	 * A method used to view the info of a garage sale when the
+	 * view info button is clicked
+	 *
+	 */
 	private class ViewInfoTrigger
 		implements ActionListener
 	{
@@ -149,6 +173,11 @@ public class BuyerView
 			}
 		}
 	}
+	/**
+	 * A method used to search for garage sales when the view garage
+	 * sales button is clicked
+	 *
+	 */
 	private class SearchTrigger
 		implements ActionListener
 	{

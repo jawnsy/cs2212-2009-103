@@ -1,13 +1,13 @@
 package ca.uwo.garage;
 
 @SuppressWarnings("serial")
+/**
+ *  This exception is thrown when a Controller is started without sufficient
+ *  initialization. See the documentation for details.
+ */
 public class ControllerNotReadyException
 	extends GarageException
 {
-	/**
-	 * This exception is thrown when a Controller is start()ed without sufficient
-	 * initialization. See the documentation for details.
-	 */
 	public ControllerNotReadyException() {
 	    super("Unknown error occured while starting controller.");
 	}

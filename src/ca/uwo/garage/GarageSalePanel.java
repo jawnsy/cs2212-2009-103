@@ -13,7 +13,11 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
 
 import ca.uwo.garage.storage.GarageSale;
-
+/**
+ * This class represents the main panel in the buyer mode
+ * @author Jon
+ *
+ */
 @SuppressWarnings("serial")
 public class GarageSalePanel
 	extends JPanel
@@ -21,6 +25,9 @@ public class GarageSalePanel
 	private JList m_list;
 	private LinkedList<GarageSale> m_sales;
 
+	/**
+	 * The constructor for this class
+	 */
 	public GarageSalePanel()
 	{
 		setLayout(new BorderLayout());
@@ -31,6 +38,10 @@ public class GarageSalePanel
 		m_list.setLayoutOrientation(JList.VERTICAL);
 		add(m_list, BorderLayout.CENTER);
 	}
+	/**
+	 * A method used to update the panel
+	 * @param sales the garage sales
+	 */
 	public void update(Collection<GarageSale> sales)
 	{
 		Iterator<GarageSale> iter = sales.iterator();
@@ -49,6 +60,10 @@ public class GarageSalePanel
 		if (!listModel.isEmpty())
 			m_list.setSelectedIndex(0);
 	}
+	/**
+	 * A method used to filter garage sales the user has selected to view
+	 * @param filter the filter object
+	 */
 	public void filter(SearchFilter filter)
 	{
 		DefaultListModel listModel = new DefaultListModel();
@@ -66,10 +81,18 @@ public class GarageSalePanel
 		if (!listModel.isEmpty())
 			m_list.setSelectedIndex(0);
 	}
+	/**
+	 * A method used to get the current garage sale selected
+	 * @return the garage sale selected
+	 */
 	public GarageSale getSelected()
 	{
 		return (GarageSale)m_list.getSelectedValue();
 	}
+	/**
+	 * A method used to add the action listener for the list of garage sales
+	 * @param ev the action listener
+	 */
 	public void addGarageSaleTrigger(ListSelectionListener ev)
 	{
 		m_list.addListSelectionListener(ev);
